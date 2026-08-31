@@ -71,7 +71,23 @@ function StoreFilters({ value, onChange }) { return <div className="store-filter
 function WeekList({ items, onDetails }) { return <div className="week-list">{items.map((game, index) => <button className="week-row" key={game.id} onClick={() => onDetails(game)}><strong>{index + 1}</strong><SafeImage src={game.coverUrl} alt="" /><span className="week-title">{game.shortTitle}</span><Score value={game.score} /><Trend value={game.trend} /></button>)}</div>; }
 function AllTime({ items, onDetails }) { return <div className="poster-grid">{items.slice(0, 5).map((game) => <button className="poster" key={game.id} onClick={() => onDetails(game)}><SafeImage src={game.coverUrl} alt={`Capa de ${game.shortTitle}`} /><span className="poster-score">{formatScore(game.score)}</span></button>)}</div>; }
 function RecordCard({ record, onDetails }) { return <button className="record-card" onClick={() => onDetails(record.game || games.witcher)}><div className="section-kicker">RECORDE MONITORADO</div><p>{record.label}</p><Score value={record.value} /><SafeImage src={record.coverUrl} alt="" /><b>{record.title}</b><small>Alcançado em<br />{record.date}</small></button>; }
-function Home({ data, onDetails, onMethodology }) { const [store, setStore] = useState("all"); const week = useMemo(() => store === "all" ? data.week : data.week.filter((game) => game.stores.includes(store)), [data.week, store]); return <><Hero game={data.hero} onDetails={() => onDetails(data.hero)} onMethodology={onMethodology} /><TopStrip items={data.topFive} onDetails={onDetails} /><section className="dashboard-grid"><div className="week-panel"><div className="section-head"><div><h2>ÚLTIMA SEMANA</h2><p>18–24 de ago. de 2026</p></div><StoreFilters value={store} onChange={setStore} /></div><WeekList items={week} onDetails={onDetails} /><button className="more-link" onClick={() => onDetails(null)}>Ver top 100 da semana <ArrowRight size={19} /></button></div><div className="alltime-panel"><div className="section-head"><div><h2>DE SEMPRE</h2><p>Os jogos com maior índice BAB-RANK de todos os tempos.</p></div></div><AllTime items={data.allTime} onDetails={onDetails} /><button className="more-link" onClick={() => onDetails(null)}>Ver todos os tempos <ArrowRight size={19} /></button></div><RecordCard record={data.records[0]} onDetails={onDetails} /></section></>; }
+function Home({ data, onDetails, onMethodology }) {
+  const [store, setStore] = useState("all");
+  const [storeData, setStoreData] = useState(null);
+  useEffect(() => {
+    if (store === "all") { setStoreData(null); return; }
+    const controller = new AbortController();
+    fetch(`/api/dashboard?store=${store}`, { signal: controller.signal })
+      .then(r => r.ok ? r.json() : Promise.reject())
+      .then(payload => setStoreData(normalizeDashboard(payload, data)))
+      .catch(() => setStoreData(null));
+    return () => controller.abort();
+  }, [store, data]);
+  const display = storeData ?? data;
+  const week = display.week;
+  const topFive = display.topFive;
+  return <><Hero game={display.hero} onDetails={() => onDetails(display.hero)} onMethodology={onMethodology} /><TopStrip items={topFive} onDetails={onDetails} /><section className="dashboard-grid"><div className="week-panel"><div className="section-head"><div><h2>ÚLTIMA SEMANA</h2><p>18–24 de ago. de 2026</p></div><StoreFilters value={store} onChange={setStore} /></div><WeekList items={week} onDetails={onDetails} /><button className="more-link" onClick={() => onDetails(null)}>Ver top 100 da semana <ArrowRight size={19} /></button></div><div className="alltime-panel"><div className="section-head"><div><h2>DE SEMPRE</h2><p>Os jogos com maior índice BAB-RANK de todos os tempos.</p></div></div><AllTime items={display.allTime} onDetails={onDetails} /><button className="more-link" onClick={() => onDetails(null)}>Ver todos os tempos <ArrowRight size={19} /></button></div><RecordCard record={display.records[0]} onDetails={onDetails} /></section></>;
+}
 function GameCard({ game, onDetails }) { return <button className="game-card" onClick={() => onDetails(game)}><SafeImage src={game.coverUrl} alt={`Capa de ${game.shortTitle}`} /><div><span className="game-card-score"><Score value={game.score} /></span><h3>{game.shortTitle}</h3><p>{game.genres.join(" · ")}</p><span className="card-stores">{game.stores.map(storeLabel).join(" · ")}</span></div></button>; }
 function Catalog({ data, query, onDetails }) {
   const [store, setStore] = useState("all");
