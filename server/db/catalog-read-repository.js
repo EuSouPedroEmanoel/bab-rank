@@ -13,7 +13,6 @@ function mapGame(row) {
     trend: Number(row.trend ?? 0),
     currentPlayers: row.currentPlayers == null ? null : Number(row.currentPlayers),
     historicalPopularity: Number(row.historicalPopularity ?? 0),
-    updatedAt: row.updatedAt ?? null,
   };
 }
 
@@ -29,7 +28,6 @@ export function createCatalogReadRepository(pool) {
           g.cover_url AS "coverUrl",
           g.hero_url AS "heroUrl",
           g.released_at AS "releaseDate",
-          g.updated_at AS "updatedAt",
           g.igdb_popularity AS "historicalPopularity",
           current_ranking.score,
           current_ranking.trend,
@@ -50,37 +48,12 @@ export function createCatalogReadRepository(pool) {
         LEFT JOIN game_genres gg ON gg.game_id = g.id
         LEFT JOIN genres ge ON ge.id = gg.genre_id
         LEFT JOIN store_listings sl ON sl.game_id = g.id
-        WHERE EXISTS (SELECT 1 FROM store_listings sl2 WHERE sl2.game_id = g.id AND sl2.store IN ('steam','epic'))
         LEFT JOIN LATERAL (
-          SELECT
-            CASE
-              WHEN s.id IS NULL OR s.status = 'outage' THEN NULL
-              WHEN e.position IS NULL THEN 0
-              ELSE 100.0 * (s.total_entries - e.position + 1) / NULLIF(s.total_entries, 0)
-            END AS score,
-            0 AS trend
-          FROM (SELECT id, total_entries, status FROM ranking_snapshots WHERE source = 'steam' ORDER BY captured_at DESC LIMIT 1) s
-          LEFT JOIN ranking_entries e ON e.snapshot_id = s.id AND e.game_id = g.id
-        ) steam_score ON true
-        LEFT JOIN LATERAL (
-          SELECT
-            CASE
-              WHEN s.id IS NULL OR s.status = 'outage' THEN NULL
-              WHEN e.position IS NULL THEN 0
-              ELSE 100.0 * (s.total_entries - e.position + 1) / NULLIF(s.total_entries, 0)
-            END AS score
-          FROM (SELECT id, total_entries, status FROM ranking_snapshots WHERE source = 'epic' ORDER BY captured_at DESC LIMIT 1) s
-          LEFT JOIN ranking_entries e ON e.snapshot_id = s.id AND e.game_id = g.id
-        ) epic_score ON true
-        LEFT JOIN LATERAL (
-          SELECT
-            CASE
-              WHEN steam_score.score IS NULL AND epic_score.score IS NULL THEN NULL
-              WHEN steam_score.score IS NULL THEN epic_score.score
-              WHEN epic_score.score IS NULL THEN steam_score.score
-              ELSE (steam_score.score + epic_score.score) / 2.0
-            END AS score,
-            COALESCE(steam_score.trend, 0) AS trend
+          SELECT score, trend
+          FROM game_rankings
+          WHERE game_id = g.id AND period = 'now' AND store = 'all'
+          ORDER BY as_of DESC
+          LIMIT 1
         ) current_ranking ON true
         LEFT JOIN LATERAL (
           SELECT re.concurrent_players
@@ -90,7 +63,7 @@ export function createCatalogReadRepository(pool) {
           ORDER BY rs.captured_at DESC
           LIMIT 1
         ) steam_metric ON true
-        GROUP BY g.id, g.updated_at, current_ranking.score, current_ranking.trend, steam_metric.concurrent_players
+        GROUP BY g.id, current_ranking.score, current_ranking.trend, steam_metric.concurrent_players
         ORDER BY COALESCE(current_ranking.score, g.igdb_popularity, 0) DESC, g.title ASC
       `);
       return result.rows.map(mapGame);
