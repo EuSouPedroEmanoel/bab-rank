@@ -9,7 +9,7 @@ button { cursor: pointer; }
 .app-shell { min-height: 100vh; background: var(--bg); }
 .site-header { height: 88px; display: flex; align-items: center; gap: 36px; padding: 0 30px; position: relative; z-index: 4; background: rgba(5,9,14,.34); }
 .site-header-overlay { position: absolute; inset: 0 0 auto; background: transparent; }
-.brand { border: 0; background: none; padding: 0; font-size: 30px; font-weight: 600; letter-spacing: -1.8px; white-space: nowrap; }
+.brand { border: 0; background: none; padding: 0; font-size: 30px; font-weight: 600; letter-spacing: -1.8px; white-space: nowrap; display:inline-flex; align-items:center; }
 .brand b { color: var(--blue); font-weight: 700; }
 .site-header nav { display: flex; gap: 34px; margin: 0 auto; height: 100%; align-items: center; }
 .site-header nav button { border: 0; background: none; color: #d3d6db; font-size: 14px; height: 100%; position: relative; }

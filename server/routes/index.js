@@ -8,7 +8,7 @@ const pageSchema = z.coerce.number().int().min(1).default(1);
 const limitSchema = z.coerce.number().int().min(1).max(100).default(20);
 
 const methodology = {
-  name: "Índice SteamTwo",
+  name: "Índice BAB-RANK",
   formula: "100 × (N - posição + 1) / N",
   rules: [
     "Jogos presentes nas duas lojas recebem a média das notas disponíveis.",

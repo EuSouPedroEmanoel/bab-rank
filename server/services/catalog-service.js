@@ -12,7 +12,7 @@ function rankingView(game, index, field = "score") {
       field === "historicalPopularity"
         ? { type: "popularity", value: game[field], label: "Popularidade histórica" }
         : { type: "players", value: game.currentPlayers, label: "Jogadores Steam" },
-    source: field === "historicalPopularity" ? "igdb" : "steamtwo",
+    source: field === "historicalPopularity" ? "igdb" : "bab-rank",
     updatedAt: mockUpdatedAt,
   };
 }
@@ -45,7 +45,7 @@ export function createCatalogService({ repository } = {}) {
         allTime,
         records: allTime.slice(0, 1).map((game) => ({
           type: "historical-score",
-          label: "Maior índice SteamTwo",
+          label: "Maior índice BAB-RANK",
           value: game.score,
           game,
           achievedAt: "2026-08-24T12:00:00.000Z",

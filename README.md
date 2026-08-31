@@ -1,8 +1,8 @@
-# BAB-STEAM-EPIC
+# BAB-RANK
 
 > **Autor:** Pedro Emanoel da Silva de Oliveira — **RA:** __________ [INSERIR RA]  
 > **Projeto Atribuído — Fatec** | Evolução de https://github.com/DavidSilvaProg/steamtwo  
-> **Pasta local:** `dev/Fatec/bab-steam-epic` | **Repositório novo:** `https://github.com/<SEU-USUARIO>/bab-steam-epic`
+> **Pasta local:** `dev/Fatec/bab-rank` | **Repositório novo:** `https://github.com/<SEU-USUARIO>/bab-rank`
 
 Catálogo de jogos com dashboard de popularidade da Steam e Epic Games, interface em React/HTML/CSS/JS, API Node.js/Express e persistência PostgreSQL — **com Docker Compose completo e integração validada**.
 

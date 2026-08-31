@@ -32,5 +32,5 @@ const app = createApp({
 });
 
 app.listen(config.port, () => {
-  console.log(`SteamTwo API disponível na porta ${config.port}`);
+  console.log(`BAB-RANK API disponível na porta ${config.port}`);
 });

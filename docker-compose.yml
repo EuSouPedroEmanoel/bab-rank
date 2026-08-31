@@ -51,4 +51,6 @@ services:
 
 volumes:
   steamtwo_pgdata:
+    external: true
+    name: bab-steam-epic_steamtwo_pgdata
 

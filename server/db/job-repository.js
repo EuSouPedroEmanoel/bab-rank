@@ -48,7 +48,10 @@ export async function createJobRepository({ databaseUrl, pool: suppliedPool } = 
   }
 
   async function transaction(clientOrPool, work) {
-    if (typeof clientOrPool.connect === "function") return withTransaction(clientOrPool, work);
+    // Fix: distinguir Pool vs Client. ActiveClient (pg Client) tem .connect mas já está conectado;
+    // Pool tem .connect e propriedade .totalCount. Cliente do pool não tem .totalCount.
+    const isPool = typeof clientOrPool.connect === "function" && typeof clientOrPool.totalCount !== "undefined";
+    if (isPool) return withTransaction(clientOrPool, work);
     await clientOrPool.query("BEGIN");
     try {
       const result = await work(clientOrPool);
@@ -116,7 +119,7 @@ export async function createJobRepository({ databaseUrl, pool: suppliedPool } = 
       return enqueue(async (client) => {
         const state = status === "success" ? "success" : "failed";
         const result = await client.query(`UPDATE sync_runs
-          SET state = $2, finished_at = $3, details = jsonb_build_object('records', $4), error_message = $5
+          SET state = $2, finished_at = $3, details = jsonb_build_object('records', $4::int), error_message = $5
           WHERE id = $1 RETURNING id, state`, [id, state, finishedAt, records, error]);
         return result.rows[0] ?? null;
       });
