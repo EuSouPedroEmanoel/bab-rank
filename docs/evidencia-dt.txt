@@ -1,0 +1,14 @@
+               List of relations
+ Schema |       Name        | Type  |  Owner   
+--------+-------------------+-------+----------
+ public | game_genres       | table | steamtwo
+ public | game_rankings     | table | steamtwo
+ public | games             | table | steamtwo
+ public | genres            | table | steamtwo
+ public | pgmigrations      | table | steamtwo
+ public | ranking_entries   | table | steamtwo
+ public | ranking_snapshots | table | steamtwo
+ public | store_listings    | table | steamtwo
+ public | sync_runs         | table | steamtwo
+(9 rows)
+

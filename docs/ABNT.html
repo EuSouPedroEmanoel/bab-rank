@@ -1,0 +1,650 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc 3.10.1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>ABNT</title>
+  <style>
+    /* Default styles provided by pandoc.
+    ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+    */
+    html {
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 12px;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    @media print {
+      html {
+        background-color: white;
+      }
+      body {
+        background-color: transparent;
+        color: black;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    svg {
+      height: auto;
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      white-space: pre-wrap;
+      font-family: Menlo, Monaco, Consolas, 'Lucida Console', monospace;
+      font-size: 85%;
+      margin: 0;
+      hyphens: manual;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      border: none;
+      border-top: 1px solid #1a1a1a;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: 1.5em;}
+    div.column{flex: auto;}
+    @media screen {
+    div.columns{gap: min(4vw, 1.5em);}
+    div.column{overflow-x: auto;}
+    }
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+    /* CSS for syntax highlighting */
+    html { -webkit-text-size-adjust: 100%; }
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      {   }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+    code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+    code span.at { color: #7d9029; } /* Attribute */
+    code span.bn { color: #40a070; } /* BaseN */
+    code span.bu { color: #008000; } /* BuiltIn */
+    code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #4070a0; } /* Char */
+    code span.cn { color: #880000; } /* Constant */
+    code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+    code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+    code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+    code span.dt { color: #902000; } /* DataType */
+    code span.dv { color: #40a070; } /* DecVal */
+    code span.er { color: #ff0000; font-weight: bold; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #40a070; } /* Float */
+    code span.fu { color: #06287e; } /* Function */
+    code span.im { color: #008000; font-weight: bold; } /* Import */
+    code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+    code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+    code span.op { color: #666666; } /* Operator */
+    code span.ot { color: #007020; } /* Other */
+    code span.pp { color: #bc7a00; } /* Preprocessor */
+    code span.sc { color: #4070a0; } /* SpecialChar */
+    code span.ss { color: #bb6688; } /* SpecialString */
+    code span.st { color: #4070a0; } /* String */
+    code span.va { color: #19177c; } /* Variable */
+    code span.vs { color: #4070a0; } /* VerbatimString */
+    code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+  </style>
+</head>
+<body>
+<h1 id="faculdade-de-tecnologia---fatec">FACULDADE DE TECNOLOGIA -
+FATEC</h1>
+<p><strong>Curso:</strong> [CURSO/SEMESTRE - INSERIR]<br />
+<strong>Disciplina:</strong> Projeto Atribuído - Integração Front-End /
+Back-End / Banco de Dados</p>
+<hr />
+<h2
+id="bab-steam-epic-evolução-do-projeto-steamtwo-com-integração-postgresql-e-docker-compose">BAB-STEAM-EPIC:
+Evolução do Projeto SteamTwo com Integração PostgreSQL e Docker
+Compose</h2>
+<p><strong>Autor:</strong> Pedro Emanoel da Silva de Oliveira<br />
+<strong>RA:</strong> __________ [INSERIR RA]</p>
+<p><strong>Orientador:</strong> [INSERIR NOME DO PROFESSOR]</p>
+<p><strong>Cidade — 2026</strong></p>
+<hr />
+<div style="text-align: center; margin-top: 40px;">
+<p><strong>BAB-STEAM-EPIC</strong><br/> Evolução do Projeto SteamTwo com
+Integração PostgreSQL e Docker Compose<br/><br/> Pedro Emanoel da Silva
+de Oliveira<br/> RA: __________<br/><br/> Trabalho apresentado como
+requisito da disciplina Projeto Atribuído<br/></p>
+</div>
+<hr />
+<h2 id="folha-de-rosto">FOLHA DE ROSTO</h2>
+<p><strong>BAB-STEAM-EPIC</strong> — Catálogo de jogos com dashboard de
+popularidade da Steam e Epic Games, evoluído a partir de
+https://github.com/DavidSilvaProg/steamtwo</p>
+<ul>
+<li><strong>Novo repositório:</strong>
+<code>https://github.com/&lt;SEU-USUARIO&gt;/bab-steam-epic</code>
+[INSERIR LINK FINAL]</li>
+<li><strong>Pasta local:</strong>
+<code>/home/pedro/dev/Fatec/bab-steam-epic</code></li>
+<li><strong>Integrante:</strong> Pedro Emanoel da Silva de Oliveira —
+RA: __________</li>
+</ul>
+<p>Trabalho desenvolvido individualmente conforme rubrica (10
+pontos).</p>
+<hr />
+<h2 id="sumário">SUMÁRIO</h2>
+<ol type="1">
+<li>Introdução</li>
+<li>Referencial Teórico — SteamTwo</li>
+<li>Metodologia e Integração Back-End / Banco de Dados</li>
+<li>Melhorias Implementadas</li>
+<li>Instruções de Execução</li>
+<li>Testes e Resultados</li>
+<li>Evidências de Funcionamento (Prints)</li>
+<li>Conclusão</li>
+<li>Referências</li>
+</ol>
+<hr />
+<h2 id="introdução">1. INTRODUÇÃO</h2>
+<p>O projeto BAB-STEAM-EPIC tem como objetivo evoluir o projeto-base
+SteamTwo, consolidando a integração entre front-end (React/Vite),
+back-end (Node.js/Express) e banco de dados (PostgreSQL 17), conforme
+exigências da rubrica:</p>
+<ul>
+<li>3,0 pts — back-end funcionando e integrado ao PostgreSQL</li>
+<li>3,0 pts — melhorias relevantes</li>
+<li>2,0 pts — integração, testes e qualidade técnica</li>
+<li>2,0 pts — PDF completo conforme ABNT</li>
+</ul>
+<p>O projeto foi desenvolvido solo, com foco prioritário na integração
+via Docker Compose.</p>
+<hr />
+<h2 id="referencial-steamtwo">2. REFERENCIAL — STEAMTWO</h2>
+<p>Funcionalidades originais:</p>
+<ul>
+<li>Dashboard com mais jogados agora, média da última semana,
+popularidade histórica e recorde monitorado</li>
+<li>Catálogo pesquisável e filtrável por loja e gênero</li>
+<li>Ranking combinado transparente: cada posição normalizada por
+<code>100 × (N - posição + 1) / N</code>, índice combinado é média das
+fontes</li>
+<li>Coleta Steam, Epic Games e IGDB com snapshots imutáveis</li>
+<li>Fallback visual quando PostgreSQL não configurado</li>
+</ul>
+<p>Stack: <code>React 19 + Vite 6</code> (front em <code>src/</code>),
+<code>Express 5 + pg 8</code> (back em <code>server/</code>),
+<code>node-pg-migrate</code>
+(<code>migrations/001_create_steamtwo_domain.js</code>),
+<code>vitest + supertest</code>.</p>
+<hr />
+<h2 id="integração-back-end-com-banco-de-dados">3. INTEGRAÇÃO BACK-END
+COM BANCO DE DADOS</h2>
+<h3 id="arquitetura">3.1 Arquitetura</h3>
+<pre><code>[Browser] -&gt; [Vite/React em src/ | dist/client] 
+          -&gt; [Express server/index.js:14 em :3001]
+          -&gt; [createPool(DATABASE_URL) server/db/pool.js:6]
+          -&gt; [PostgreSQL 17 - postgres:17-alpine]
+          -&gt; [Tabelas: games, genres, game_genres, store_listings, sync_runs, ranking_snapshots, ranking_entries, game_rankings]</code></pre>
+<ul>
+<li><code>server/config.js:6</code> lê <code>DATABASE_URL</code> do
+<code>.env</code></li>
+<li><code>server/index.js:14-18</code> cria pool e repository; se
+<code>DATABASE_URL</code> ausente, <code>healthCheck</code> retorna
+<code>{status:"not-configured", mode:"demo"}</code> (fallback)</li>
+<li>Com DB, <code>healthCheck</code> executa <code>SELECT 1</code> e
+<code>/api/health</code> retorna
+<code>{"status":"ok","database":{"status":"connected"}}</code> (validado
+em <code>curl http://127.0.0.1:3001/api/health</code>)</li>
+</ul>
+<h3 id="migrações">3.2 Migrações</h3>
+<ul>
+<li><code>migrations/001_create_steamtwo_domain.js</code> cria 9 tabelas
++ 4 enums (<code>store_name</code>, <code>sync_state</code>,
+<code>snapshot_status</code>, <code>ranking_period</code>) + função
+<code>steamtwo_prevent_snapshot_mutation()</code> (snapshots
+imutáveis)</li>
+<li>Comandos: <code>npm run db:migrate</code> (up) e
+<code>npm run db:rollback</code> (down) — testado:
+<code>MIGRATION 001_create_steamtwo_domain (UP)</code> com
+<code>CREATE TABLE</code> e <code>Migrations complete!</code></li>
+<li>Evidência: <code>SELECT name, run_on FROM pgmigrations;</code>
+retorna <code>001_create_steamtwo_domain | 2026-08-31</code>, e
+<code>\dt</code> lista 9 relações</li>
+</ul>
+<h3 id="docker-compose">3.3 Docker Compose</h3>
+<p><strong>Antes (original):</strong> apenas <code>postgres</code> em
+<code>docker-compose.yml:1</code> com <code>5432:5432</code></p>
+<p><strong>Depois (BAB-STEAM-EPIC):</strong></p>
+<div class="sourceCode" id="cb2"><pre
+class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">services</span><span class="kw">:</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">postgres</span><span class="kw">:</span><span class="co"> # postgres:17-alpine, 5433:5432 (host 5433 para evitar conflito com postgres-db em 5432), healthcheck pg_isready, volume steamtwo_pgdata</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">api</span><span class="kw">:</span><span class="co"> # build Dockerfile (node:20-alpine, npm ci + npm run build), 3001:3001, DATABASE_URL=postgres://steamtwo:steamtwo@postgres:5432/steamtwo (interno), depends_on postgres healthy, healthcheck wget /api/health</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">migrate</span><span class="kw">:</span><span class="co"> # mesmo build, command npm run db:migrate, depende de postgres healthy</span></span></code></pre></div>
+<ul>
+<li><code>Dockerfile</code> multi-stage:
+<code>FROM node:20-alpine</code>, <code>npm ci</code>,
+<code>COPY .</code>, <code>RUN npm run build</code> (gera
+<code>dist/client/index.html</code>, <code>dist/server/index.js</code>),
+<code>EXPOSE 3001</code>, <code>HEALTHCHECK wget /api/health</code>,
+<code>CMD ["node","server/index.js"]</code></li>
+<li>Host
+<code>DATABASE_URL=postgres://steamtwo:steamtwo@localhost:5433/steamtwo</code>
+(externo), container
+<code>DATABASE_URL=postgres://steamtwo:steamtwo@postgres:5432/steamtwo</code>
+(interno)</li>
+<li>Validação: <code>docker compose ps</code> mostra
+<code>bab-steam-epic-postgres-1 healthy</code> e
+<code>bab-steam-epic-api-1 healthy</code>,
+<code>docker logs bab-steam-epic-api-1</code> mostra
+<code>SteamTwo API disponível na porta 3001</code></li>
+</ul>
+<hr />
+<h2 id="melhorias-implementadas">4. MELHORIAS IMPLEMENTADAS</h2>
+<blockquote>
+<p>Esta seção deve ser expandida conforme melhorias autorais forem
+adicionadas. Estrutura sugerida para cada melhoria:</p>
+</blockquote>
+<table>
+<colgroup>
+<col style="width: 5%" />
+<col style="width: 17%" />
+<col style="width: 25%" />
+<col style="width: 32%" />
+<col style="width: 18%" />
+</colgroup>
+<thead>
+<tr>
+<th>#</th>
+<th>Melhoria</th>
+<th>Arquivo:linha</th>
+<th>Descrição autoral</th>
+<th>Evidência</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>Docker Compose completo</td>
+<td><code>docker-compose.yml:1</code>, <code>Dockerfile:1</code></td>
+<td>Evoluiu compose de 1 para 3 serviços, permitindo
+<code>docker compose up --build</code> reproduzível, sem dependência de
+Node local</td>
+<td><code>docker compose ps</code> healthy</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Mapeamento de porta 5433</td>
+<td><code>docker-compose.yml:9</code>, <code>.env:3</code></td>
+<td>Evita conflito com <code>postgres-db</code> (5432) já em uso,
+documentado</td>
+<td><code>docker ps</code> 0.0.0.0:5433-&gt;5432</td>
+</tr>
+<tr>
+<td>3</td>
+<td>[INSERIR] Filtros/busca avançada</td>
+<td><code>src/...</code></td>
+<td>Busca com debounce, filtro por popularidade, ordenação</td>
+<td>Print catálogo</td>
+</tr>
+<tr>
+<td>4</td>
+<td>[INSERIR] Dashboard</td>
+<td><code>src/...</code></td>
+<td>Gráfico 7 dias, card recorde</td>
+<td>Print dashboard</td>
+</tr>
+<tr>
+<td>5</td>
+<td>[INSERIR] Validação zod + tratamento erros</td>
+<td><code>server/routes/...</code></td>
+<td>Middleware padronizado</td>
+<td>Teste api 200/400</td>
+</tr>
+</tbody>
+</table>
+<p><em>Atualmente entregues: itens 1 e 2 (integração). Itens 3-5 são
+próximos passos para completar 3,0 pts de melhorias.</em></p>
+<hr />
+<h2 id="instruções-para-executar-o-projeto">5. INSTRUÇÕES PARA EXECUTAR
+O PROJETO</h2>
+<p>Requisitos: Docker 29+, Node 20+ (via fnm), Git</p>
+<div class="sourceCode" id="cb3"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 1. Clonar (ou usar pasta local)</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> clone https://github.com/<span class="op">&lt;</span>SEU-USUARIO<span class="op">&gt;</span>/bab-steam-epic.git</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> bab-steam-epic</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="co"># 2. Instalar</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="ex">fnm</span> exec <span class="at">--using</span><span class="op">=</span>lts-latest npm install</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="co"># 3. Configurar env (não commitar .env)</span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="fu">cp</span> .env.example .env</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Editar se necessário: DATABASE_URL=postgres://steamtwo:steamtwo@localhost:5433/steamtwo</span></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a><span class="co"># 4. Subir banco + api via Docker Compose (recomendado)</span></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> compose up <span class="at">-d</span> <span class="at">--build</span></span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a><span class="co"># ou apenas postgres para dev local:</span></span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a><span class="co"># docker compose up -d postgres</span></span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a><span class="co"># 5. Migrações</span></span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a><span class="ex">fnm</span> exec <span class="at">--using</span><span class="op">=</span>lts-latest npm run db:migrate</span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a><span class="co"># Reverter se necessário: fnm exec --using=lts-latest npm run db:rollback</span></span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a><span class="co"># 6. Validar integração</span></span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a><span class="ex">curl</span> http://127.0.0.1:3001/api/health</span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a><span class="co"># Esperado: {&quot;status&quot;:&quot;ok&quot;,&quot;database&quot;:{&quot;status&quot;:&quot;connected&quot;}}</span></span>
+<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a><span class="co"># 7. Dev local (sem Docker api)</span></span>
+<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a><span class="ex">fnm</span> exec <span class="at">--using</span><span class="op">=</span>lts-latest npm run dev:api  <span class="co"># :3001</span></span>
+<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a><span class="ex">fnm</span> exec <span class="at">--using</span><span class="op">=</span>lts-latest npm run dev      <span class="co"># :5173</span></span>
+<span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a><span class="co"># 8. Produção via Docker (api serve front)</span></span>
+<span id="cb3-30"><a href="#cb3-30" aria-hidden="true" tabindex="-1"></a><span class="co"># Após build, acessar http://127.0.0.1:3001/</span></span>
+<span id="cb3-31"><a href="#cb3-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-32"><a href="#cb3-32" aria-hidden="true" tabindex="-1"></a><span class="co"># 9. Testes</span></span>
+<span id="cb3-33"><a href="#cb3-33" aria-hidden="true" tabindex="-1"></a><span class="ex">fnm</span> exec <span class="at">--using</span><span class="op">=</span>lts-latest npm test</span>
+<span id="cb3-34"><a href="#cb3-34" aria-hidden="true" tabindex="-1"></a><span class="ex">fnm</span> exec <span class="at">--using</span><span class="op">=</span>lts-latest npm run build</span>
+<span id="cb3-35"><a href="#cb3-35" aria-hidden="true" tabindex="-1"></a><span class="ex">fnm</span> exec <span class="at">--using</span><span class="op">=</span>lts-latest npm run test:sites</span></code></pre></div>
+<p>Frontend: <code>http://127.0.0.1:3001/</code> (Docker) ou
+<code>http://127.0.0.1:5173/</code> (Vite dev)<br />
+API: <code>http://127.0.0.1:3001/api/health</code> e
+<code>http://127.0.0.1:3001/api/games</code></p>
+<p>Para IGDB: preencher <code>TWITCH_CLIENT_ID</code> e
+<code>TWITCH_CLIENT_SECRET</code> no <code>.env</code> e executar
+<code>npm run sync:catalog</code>, <code>sync:rankings</code>,
+<code>sync:popularity</code>.</p>
+<hr />
+<h2 id="testes-realizados-e-resultados">6. TESTES REALIZADOS E
+RESULTADOS</h2>
+<table>
+<colgroup>
+<col style="width: 12%" />
+<col style="width: 16%" />
+<col style="width: 33%" />
+<col style="width: 37%" />
+</colgroup>
+<thead>
+<tr>
+<th>Teste</th>
+<th>Comando</th>
+<th>Resultado esperado</th>
+<th>Resultado observado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Migração UP</td>
+<td><code>npm run db:migrate</code></td>
+<td><code>Migrations complete!</code> + 9 tabelas</td>
+<td>OK — <code>CREATE TABLE games...</code> e
+<code>Migrations complete!</code></td>
+</tr>
+<tr>
+<td>Migração DOWN/UP</td>
+<td><code>db:rollback</code> + <code>db:migrate</code></td>
+<td>Reversível</td>
+<td>OK — <code>DROP TABLE</code> e recriação</td>
+</tr>
+<tr>
+<td>pgmigrations</td>
+<td><code>psql -c "SELECT name FROM pgmigrations"</code></td>
+<td>1 linha</td>
+<td>OK — <code>001_create_steamtwo_domain</code></td>
+</tr>
+<tr>
+<td></td>
+<td><code>psql -c "\dt"</code></td>
+<td>9 tabelas</td>
+<td>OK —
+<code>games, genres, game_genres, store_listings, sync_runs, ranking_snapshots, ranking_entries, game_rankings, pgmigrations</code></td>
+</tr>
+<tr>
+<td>/api/health</td>
+<td><code>curl :3001/api/health</code></td>
+<td><code>connected</code></td>
+<td>OK —
+<code>{"status":"ok","database":{"status":"connected"}}</code></td>
+</tr>
+<tr>
+<td>/api/games</td>
+<td><code>curl :3001/api/games</code></td>
+<td>200 + pagination</td>
+<td>OK — <code>{"items":[],"pagination":{"page":1,"limit":12}}</code>
+(vazio sem seed)</td>
+</tr>
+<tr>
+<td>/ (front)</td>
+<td><code>curl :3001/</code></td>
+<td>HTML</td>
+<td>OK — <code>&lt;!doctype html&gt;&lt;title&gt;SteamTwo</code></td>
+</tr>
+<tr>
+<td>npm test</td>
+<td><code>npm test</code></td>
+<td>23 passed</td>
+<td>OK — <code>5 passed, 23 passed</code></td>
+</tr>
+<tr>
+<td>npm build</td>
+<td><code>npm run build</code></td>
+<td><code>dist/client/index.html</code></td>
+<td>OK — <code>vite v6.4.2 built in 2.7s</code></td>
+</tr>
+<tr>
+<td>test:sites</td>
+<td><code>npm run test:sites</code></td>
+<td>4 passed</td>
+<td>OK — <code>pass 4, fail 0</code></td>
+</tr>
+<tr>
+<td>Docker health</td>
+<td><code>docker compose ps</code></td>
+<td>healthy</td>
+<td>OK —
+<code>postgres healthy, api health: starting -&gt; healthy</code></td>
+</tr>
+<tr>
+<td>Docker logs</td>
+<td><code>docker logs api</code></td>
+<td><code>porta 3001</code></td>
+<td>OK — <code>SteamTwo API disponível na porta 3001</code></td>
+</tr>
+</tbody>
+</table>
+<p>Cobertura vitest: <code>tests/api/routes.test.js (4)</code>,
+<code>tests/domain/ranking.test.js (6)</code>,
+<code>tests/integrations</code> etc.</p>
+<hr />
+<h2 id="evidências-de-funcionamento">7. EVIDÊNCIAS DE FUNCIONAMENTO</h2>
+<blockquote>
+<p>Inserir aqui capturas de tela (substituir placeholders por prints
+reais):</p>
+</blockquote>
+<ol type="1">
+<li><code>docker compose ps</code> — postgres 5433 e api 3001
+healthy</li>
+<li><code>docker logs bab-steam-epic-api-1</code> — API na porta
+3001</li>
+<li><code>curl /api/health</code> — JSON connected</li>
+<li><code>psql \dt</code> e <code>pgmigrations</code></li>
+<li><code>npm test</code> — 23 passed</li>
+<li><code>npm run build</code> — dist/client + dist/server</li>
+<li>Frontend em <code>http://127.0.0.1:3001/</code> — dashboard e
+catálogo</li>
+<li>Dashboard com rankings (quando houver seed)</li>
+</ol>
+<p>Para gerar evidências via terminal:</p>
+<div class="sourceCode" id="cb4"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> compose ps <span class="op">&gt;</span> docs/evidencia-ps.txt</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="ex">curl</span> <span class="at">-s</span> http://127.0.0.1:3001/api/health <span class="kw">|</span> <span class="ex">jq</span> . <span class="op">&gt;</span> docs/evidencia-health.json</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> exec bab-steam-epic-postgres-1 psql <span class="at">-U</span> steamtwo <span class="at">-d</span> steamtwo <span class="at">-c</span> <span class="st">&quot;\dt&quot;</span> <span class="op">&gt;</span> docs/evidencia-dt.txt</span></code></pre></div>
+<hr />
+<h2 id="conclusão">8. CONCLUSÃO</h2>
+<p>A integração foi comprovada: Docker Compose orquestra Postgres 17 +
+API Node, migrações executam e <code>api/health</code> retorna
+<code>connected</code>. O sistema serve front e API na mesma porta em
+produção, mantendo compatibilidade com dev local (<code>5173</code> +
+<code>3001</code>). Próximos passos são expandir melhorias autorais
+(filtros, dashboard, validações) para completar 3,0 pts restantes.</p>
+<hr />
+<h2 id="referências">9. REFERÊNCIAS</h2>
+<ul>
+<li>DavidSilvaProg/steamtwo —
+https://github.com/DavidSilvaProg/steamtwo</li>
+<li>Documentação PostgreSQL 17, Docker, Node.js 20, Express 5, Vite
+6</li>
+<li>ABNT NBR 14724:2011 — Trabalhos acadêmicos</li>
+</ul>
+<hr />
+<p><strong>ANEXO:</strong> Link do repositório:
+<code>https://github.com/&lt;SEU-USUARIO&gt;/bab-steam-epic</code><br />
+<strong>Autor:</strong> Pedro Emanoel da Silva de Oliveira — RA:
+__________ (inserir)<br />
+<strong>Data:</strong> Agosto/2026</p>
+</body>
+</html>
