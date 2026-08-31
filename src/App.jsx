@@ -73,11 +73,14 @@ function SafeImage({ src, alt, className = "", width = 320, priority = false, ti
   return <img src={url} alt={alt} loading={priority ? "eager" : "lazy"} fetchPriority={priority ? "high" : "auto"} decoding="async" crossOrigin={proxied ? "anonymous" : undefined} className={className} onError={() => setUrl(fallback)} {...props} />;
 }
 function Trend({ value, compact = false }) { if (!value) return <span className="trend neutral">—</span>; const positive = value > 0; return <span className={`trend ${positive ? "positive" : "negative"}`}>{positive ? <ArrowUpRight size={compact ? 15 : 16} weight="bold" /> : <ArrowDownRight size={compact ? 15 : 16} weight="bold" />} {Math.abs(value)}</span>; }
-function Header({ view, onNavigate, search, setSearch }) { return <header className={`site-header ${view === "home" ? "site-header-overlay" : ""}`}><button className="brand" onClick={() => onNavigate("home")} aria-label="BAB-RANK, início"><Crown size={26} weight="fill" style={{marginRight:8, color:'var(--blue)', verticalAlign:'middle'}} /><span>BAB</span><b>RANK</b></button><nav aria-label="Navegação principal"><button className={view === "home" ? "active" : ""} onClick={() => onNavigate("home")}>Início</button><button className={view === "catalog" ? "active" : ""} onClick={() => onNavigate("catalog")}>Catálogo</button><button className={view === "rankings" ? "active" : ""} onClick={() => onNavigate("rankings")}>Rankings</button></nav><label className="search-box"><MagnifyingGlass size={20} /><input value={search} onChange={(event) => setSearch(event.target.value)} placeholder="Buscar jogos" aria-label="Buscar jogos" /></label></header>; }
+function Header({ view, onNavigate, search, setSearch }) { return <header className={`site-header ${view === "home" ? "site-header-overlay" : ""}`}><button className="brand" onClick={() => onNavigate("home")} aria-label="BAB-RANK, início"><Crown size={26} weight="fill" style={{marginRight:8, color:'var(--blue)', verticalAlign:'middle'}} /><span>BAB</span><b>RANK</b></button><nav aria-label="Navegação principal"><button className={view === "home" ? "active" : ""} onClick={() => onNavigate("home")}>Início</button><button className={view === "catalog" ? "active" : ""} onClick={() => onNavigate("catalog")}>Catálogo</button><button className={view === "rankings" ? "active" : ""} onClick={() => onNavigate("rankings")}>Rankings</button><button className={view === "busca" ? "active" : ""} onClick={() => onNavigate("busca")}>Buscar</button></nav><button onClick={() => onNavigate("busca")} aria-label="Buscar jogos" style={{ marginLeft: 'auto', display: 'inline-flex', alignItems: 'center', gap: 8, padding: '8px 14px', borderRadius: 20, border: '1px solid rgba(255,255,255,0.18)', background: 'rgba(255,255,255,0.08)', color: 'white', cursor: 'pointer' }}><MagnifyingGlass size={18} /> Buscar</button></header>; }
 function Score({ value, large = false }) { return <span className={large ? "score score-large" : "score"}>{formatScore(value)}</span>; }
 function Hero({ game, onDetails, onMethodology }) {
   const [expanded, setExpanded] = useState(false);
-  return <section className="hero" style={{ "--hero-image": `url(${game.heroUrl})` }}><div className="hero-content"><div className="spotlight"><span>DATA SPOTLIGHT</span><Circle size={7} weight="fill" color="var(--blue)" /> <time>Segunda-feira, 24 de agosto de 2026</time></div><div className="eyebrow">O JOGO DO MOMENTO</div><h1>ELDEN RING <small>SHADOW <em>OF THE</em> ERDTREE</small></h1><p className={`hero-summary ${expanded ? "expanded" : "clamped"}`}>{game.summary}</p><button className="ver-mais" onClick={() => setExpanded(v => !v)} aria-expanded={expanded}>{expanded ? "Ver menos" : "Ver mais"}</button><div className="hero-actions"><button className="primary-button" onClick={onDetails}>Ver detalhes</button><button className="list-button"><BookmarkSimple size={19} /> Adicionar à lista</button></div></div><aside className="hero-score"><div className="score-heading"><h2>Índice BAB-RANK</h2><button onClick={onMethodology}>Como calculamos <Info size={15} /></button></div><div><Score value={game.score} large /> <span className="out-of">/100</span></div><p>Ranking combinado de Steam e Epic Games que considera tração recente, qualidade e engajamento da comunidade.</p><div className="score-lines"><span><TrendUp size={19} /> Tração (últ. 7 dias) <b>96</b></span><span><Star size={19} /> Qualidade (avaliações) <b>93</b></span><span><UsersThree size={19} /> Engajamento <b>95</b></span></div><small>Dados de 18–24 de ago. de 2026</small></aside></section>;
+  const titleParts = (game.shortTitle || game.title || "").split(":");
+  const mainTitle = titleParts[0]?.trim() || game.title;
+  const subTitle = titleParts.slice(1).join(":").trim();
+  return <section className="hero" style={{ "--hero-image": `url(${game.heroUrl})` }}><div className="hero-content"><div className="spotlight"><span>DATA SPOTLIGHT</span><Circle size={7} weight="fill" color="var(--blue)" /> <time>Segunda-feira, 24 de agosto de 2026</time></div><div className="eyebrow">O JOGO DO MOMENTO</div><h1>{mainTitle.toUpperCase()} {subTitle && <small>{subTitle}</small>}</h1><p className={`hero-summary ${expanded ? "expanded" : "clamped"}`}>{game.summary}</p><button className="ver-mais" onClick={() => setExpanded(v => !v)} aria-expanded={expanded}>{expanded ? "Ver menos" : "Ver mais"}</button><div className="hero-actions"><button className="primary-button" onClick={onDetails}>Ver detalhes</button><button className="list-button"><BookmarkSimple size={19} /> Adicionar à lista</button></div></div><aside className="hero-score"><div className="score-heading"><h2>Índice BAB-RANK</h2><button onClick={onMethodology}>Como calculamos <Info size={15} /></button></div><div><Score value={game.score} large /> <span className="out-of">/100</span></div><p>Ranking combinado de Steam e Epic Games que considera tração recente, qualidade e engajamento da comunidade.</p><div className="score-lines"><span><TrendUp size={19} /> Tração (últ. 7 dias) <b>96</b></span><span><Star size={19} /> Qualidade (avaliações) <b>93</b></span><span><UsersThree size={19} /> Engajamento <b>95</b></span></div><small>Dados de 18–24 de ago. de 2026</small></aside></section>;
 }
 function TopStrip({ items, onDetails }) { return <section className="top-strip" aria-label="Top cinco da semana">{items.map((game, index) => <button className="top-item" key={game.id} onClick={() => onDetails(game)}><strong>{index + 1}</strong><SafeImage src={game.coverUrl} alt="" /><span><b>{game.shortTitle}</b><Score value={game.score} /><Trend value={game.trend} compact /></span></button>)}</section>; }
 function StoreFilters({ value, onChange }) { return <div className="store-filter" role="tablist" aria-label="Filtrar por loja">{[["all", "Todos"], ["steam", "Steam"], ["epic", "Epic Games"]].map(([key, label]) => <button key={key} className={value === key ? "selected" : ""} onClick={() => onChange(key)} role="tab" aria-selected={value === key}>{label}</button>)}</div>; }
@@ -94,9 +97,10 @@ function Home({ data, onDetails, onMethodology }) {
       .then(r => r.ok ? r.json() : Promise.reject())
       .then(payload => {
         const items = Array.isArray(payload.items) ? payload.items : [];
+        if (!items.length) { setWeekOverride(null); return; }
         setWeekOverride(items.map(it => normalizeGame(it, fallbackForSlug(it.slug) || {})));
       })
-      .catch(() => setWeekOverride([]));
+      .catch(() => setWeekOverride(null));
     return () => controller.abort();
   }, [store]);
   const week = weekOverride ?? data.week;
@@ -172,8 +176,11 @@ function Catalog({ data, query: initialQuery, onDetails }) {
       setRefreshingSlug(null);
     }
   };
-  const display = items;
-  return <section className="catalog-page"><div className="page-intro"><div><span className="eyebrow">BIBLIOTECA BAB-RANK</span><h1>Catálogo de jogos</h1><p>Explore jogos acompanhados pelas fontes Steam, Epic Games e IGDB.</p></div><GameController size={58} weight="thin" /></div><div style={{ display: 'flex', gap: 12, marginBottom: 16, flexWrap: 'wrap' }}><label className="search-box" style={{ flex: '1 1 280px', maxWidth: 420 }}><MagnifyingGlass size={18} /><input value={searchInput} onChange={(e) => setSearchInput(e.target.value)} placeholder="Pesquisar jogos... (ex: Elden Ring)" aria-label="Pesquisar jogos" /></label><span style={{ alignSelf: 'center', fontSize: 12, color: 'var(--muted)' }}>{searchInput !== debouncedQuery ? "Digitando..." : ""}</span></div><div className="catalog-toolbar"><div className="filter-control"><FunnelSimple size={18} /><StoreFilters value={store} onChange={setStore} /></div><label className="select-control">Gênero <select value={genre} onChange={(event) => setGenre(event.target.value)}><option value="all">Todos os gêneros</option>{genres.map((item) => <option value={item} key={item}>{item}</option>)}</select><CaretDown size={16} /></label></div><div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12, fontSize: 12, color: 'var(--muted)', flexWrap: 'wrap', gap: 8 }}><span>{loading ? "Buscando..." : `${total} jogos encontrados em ${elapsed}ms`}</span><span>Última atualização: {formatDate(lastUpdate || data.updatedAt)}</span></div>{loading ? <div className="empty-state"><GameController size={34} /><h2>Carregando catálogo</h2><p>Buscando jogos nas fontes do BAB-RANK…</p></div> : display.length ? <><div className="catalog-grid">{display.map((game) => (<div key={game.id} style={{ position: 'relative' }}>{refreshingSlug === game.slug && (<div style={{ position: 'absolute', inset: 0, background: 'rgba(0,0,0,0.65)', display: 'grid', placeItems: 'center', zIndex: 2, borderRadius: 5 }}><span style={{ color: 'white', fontSize: 12, display: 'flex', alignItems: 'center', gap: 6 }}><span style={{ width: 12, height: 12, border: '2px solid white', borderTopColor: 'transparent', borderRadius: '50%', display: 'inline-block', animation: 'spin 0.7s linear infinite' }} /> Atualizando...</span></div>)}<GameCard game={game} onDetails={handleSelect} /></div>))}</div><div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: 12, marginTop: 24 }}><button onClick={() => setPage((p) => Math.max(1, p - 1))} disabled={page <= 1} style={{ padding: '8px 16px', borderRadius: 8, border: '1px solid var(--line)', background: page <= 1 ? 'transparent' : 'var(--blue)', color: page <= 1 ? 'var(--muted)' : 'white', cursor: page <= 1 ? 'not-allowed' : 'pointer', opacity: page <= 1 ? 0.5 : 1 }}>Anterior</button><span style={{ fontSize: 13, color: 'var(--muted)' }}>Página {page} de {totalPages} — {display.length} jogos</span><button onClick={() => setPage((p) => Math.min(totalPages, p + 1))} disabled={page >= totalPages} style={{ padding: '8px 16px', borderRadius: 8, border: '1px solid var(--line)', background: page >= totalPages ? 'transparent' : 'var(--blue)', color: page >= totalPages ? 'var(--muted)' : 'white', cursor: page >= totalPages ? 'not-allowed' : 'pointer', opacity: page >= totalPages ? 0.5 : 1 }}>Próxima</button></div></> : <div className="empty-state"><GameController size={34} /><h2>{apiError ? "Catálogo temporariamente indisponível" : "Nenhum jogo encontrado"}</h2><p>{apiError ? "Exibindo os últimos jogos válidos." : "Tente outra busca ou remova algum filtro."}</p></div>}</section>;
+  const hasData = items.length > 0;
+  const display = hasData ? items : fallbackGames.slice(0, limit);
+  const effectiveTotal = hasData ? total : fallbackGames.length;
+  const effectivePages = hasData ? totalPages : 1;
+  return <section className="catalog-page"><div className="page-intro"><div><span className="eyebrow">BIBLIOTECA BAB-RANK</span><h1>Catálogo de jogos</h1><p>Explore jogos acompanhados pelas fontes Steam, Epic Games e IGDB.</p></div><GameController size={58} weight="thin" /></div><div style={{ display: 'flex', gap: 12, marginBottom: 16, flexWrap: 'wrap' }}><label className="search-box" style={{ flex: '1 1 280px', maxWidth: 420 }}><MagnifyingGlass size={18} /><input value={searchInput} onChange={(e) => setSearchInput(e.target.value)} placeholder="Pesquisar jogos... (ex: Elden Ring)" aria-label="Pesquisar jogos" /></label><span style={{ alignSelf: 'center', fontSize: 12, color: 'var(--muted)' }}>{searchInput !== debouncedQuery ? "Digitando..." : ""}</span></div><div className="catalog-toolbar"><div className="filter-control"><FunnelSimple size={18} /><StoreFilters value={store} onChange={setStore} /></div><label className="select-control">Gênero <select value={genre} onChange={(event) => setGenre(event.target.value)}><option value="all">Todos os gêneros</option>{genres.map((item) => <option value={item} key={item}>{item}</option>)}</select><CaretDown size={16} /></label></div><div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12, fontSize: 12, color: 'var(--muted)', flexWrap: 'wrap', gap: 8 }}><span>{loading ? "Buscando..." : `${effectiveTotal} jogos encontrados em ${elapsed}ms`}</span><span>Última atualização: {formatDate(lastUpdate || data.updatedAt)}</span></div>{loading ? <div className="empty-state"><GameController size={34} /><h2>Carregando catálogo</h2><p>Buscando jogos nas fontes do BAB-RANK…</p></div> : display.length ? <><div className="catalog-grid">{display.map((game) => (<div key={game.id} style={{ position: 'relative' }}>{refreshingSlug === game.slug && (<div style={{ position: 'absolute', inset: 0, background: 'rgba(0,0,0,0.65)', display: 'grid', placeItems: 'center', zIndex: 2, borderRadius: 5 }}><span style={{ color: 'white', fontSize: 12, display: 'flex', alignItems: 'center', gap: 6 }}><span style={{ width: 12, height: 12, border: '2px solid white', borderTopColor: 'transparent', borderRadius: '50%', display: 'inline-block', animation: 'spin 0.7s linear infinite' }} /> Atualizando...</span></div>)}<GameCard game={game} onDetails={handleSelect} /></div>))}</div><div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: 12, marginTop: 24 }}><button onClick={() => setPage((p) => Math.max(1, p - 1))} disabled={page <= 1} style={{ padding: '8px 16px', borderRadius: 8, border: '1px solid var(--line)', background: page <= 1 ? 'transparent' : 'var(--blue)', color: page <= 1 ? 'var(--muted)' : 'white', cursor: page <= 1 ? 'not-allowed' : 'pointer', opacity: page <= 1 ? 0.5 : 1 }}>Anterior</button><span style={{ fontSize: 13, color: 'var(--muted)' }}>Página {page} de {totalPages} — {display.length} jogos</span><button onClick={() => setPage((p) => Math.min(totalPages, p + 1))} disabled={page >= totalPages} style={{ padding: '8px 16px', borderRadius: 8, border: '1px solid var(--line)', background: page >= totalPages ? 'transparent' : 'var(--blue)', color: page >= totalPages ? 'var(--muted)' : 'white', cursor: page >= totalPages ? 'not-allowed' : 'pointer', opacity: page >= totalPages ? 0.5 : 1 }}>Próxima</button></div></> : <div className="empty-state"><GameController size={34} /><h2>{apiError ? "Catálogo temporariamente indisponível" : "Nenhum jogo encontrado"}</h2><p>{apiError ? "Exibindo os últimos jogos válidos." : "Tente outra busca ou remova algum filtro."}</p></div>}</section>;
 }
 function Rankings({ data, onDetails }) {
   const [period, setPeriod] = useState("week");
@@ -257,6 +264,63 @@ function Detail({ game, onBack, onMethodology }) {
   }, [pageBg, pageBgGradient, baseHue]);
   return <section className="detail-page detail-page--hero"><section className="hero" style={{ "--hero-image": `url(${game.heroUrl})`, backgroundColor: '#000' }}><button className="back-link back-link--over" onClick={onBack}><ArrowRight size={17} /> Voltar</button><div className="hero-content" style={{ background: `linear-gradient(to bottom, transparent, ${pageBg}15)` , borderRadius: 8, padding: 12 }}><span className="eyebrow">DETALHE DO JOGO</span><h1>{game.shortTitle}</h1><div className="detail-tags">{game.genres.map((genre) => <span key={genre}>{genre}</span>)}</div><div className="hero-actions" style={{ flexWrap: 'wrap' }}>{game.stores.length ? game.stores.map((s) => (<a key={s} className="primary-button" href={game.storeLinks?.[s] || storeUrlForGame({ ...game, stores: [s] })} target="_blank" rel="noreferrer">Abrir na {storeLabel(s)} <ArrowSquareOut size={17} /></a>)) : (<a className="primary-button" href={storeUrlForGame(game)} target="_blank" rel="noreferrer">Abrir na loja <ArrowSquareOut size={17} /></a>)}<button className="list-button"><BookmarkSimple size={19} /> Adicionar à lista</button></div></div><aside className="hero-score" style={{ background: `hsla(${baseHue}, 65%, 20%, 0.38)`, backdropFilter: 'blur(10px)', WebkitBackdropFilter: 'blur(10px)', borderRadius: 12, padding: 16, border: "1px solid rgba(255,255,255,0.14)" }}><div className="score-heading"><h2>Índice BAB-RANK</h2><button onClick={onMethodology}>Como calculamos <Info size={14} /></button></div><div><Score value={game.score} large /> <span className="out-of">/100</span></div><p>Índice combinado de tração, qualidade e engajamento.</p><div className="score-lines"><span><TrendUp size={19} /> Tração <b>{game.trend ?? 0}</b></span><span><Star size={19} /> Gêneros <b>{game.genres.length}</b></span><span><UsersThree size={19} /> Loja <b>{storeLabel(game.stores[0] || "all")}</b></span></div><small>Última atualização: {formatDate(game.updatedAt)}</small></aside></section><div className="detail-columns"><div className="detail-main" style={{ display: 'grid', gap: 24 }}><article style={{ background: cardBg, padding: 16, borderRadius: 12, border: "1px solid rgba(255,255,255,0.12)" }}><h2>Sobre este jogo</h2><p>{game.summary} O índice combina tração, qualidade e engajamento para oferecer uma leitura comparável entre os títulos.</p></article><div style={{ background: cardBg, padding: '10px 14px', borderRadius: 10, border: "1px solid rgba(255,255,255,0.12)" }}><h2 style={{ fontSize: 14, marginBottom: 6 }}>Fontes</h2><div className="source-pills" style={{ gap: 6 }}>{game.stores.map((store) => <span key={store} style={{ padding: '3px 8px', fontSize: 10 }}><Check size={12} /> {storeLabel(store)}</span>)}<span style={{ padding: '3px 8px', fontSize: 10 }}><Check size={12} /> IGDB</span></div><small style={{ fontSize: 10, marginTop: 6, display: 'block' }}>Última atualização: {formatDate(game.updatedAt)}</small></div></div><aside style={{ background: cardBg, padding: 12, borderRadius: 12, border: "1px solid rgba(255,255,255,0.12)", alignSelf: 'start' }}><h2 style={{ fontFamily: 'var(--display)', fontSize: 16, marginBottom: 10 }}>Capa</h2><div className="group relative w-fit h-fit mx-auto aspect-[2/3] w-full max-w-[160px] border border-white/10 rounded-xl overflow-hidden transition-all duration-300 hover:scale-[1.07] hover:shadow-xl hover:brightness-105"><SafeImage src={game.coverUrl} alt={`Capa de ${game.title}`} style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block', borderRadius: 12 }} /></div></aside></div></section>;
 }
+function SearchPage({ initialQuery, onDetails }) {
+  const [q, setQ] = useState(initialQuery || "");
+  const [debounced, setDebounced] = useState(initialQuery || "");
+  const [items, setItems] = useState([]);
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [total, setTotal] = useState(0);
+  const [loading, setLoading] = useState(false);
+  const [elapsed, setElapsed] = useState(0);
+  const [lastUpdate, setLastUpdate] = useState(null);
+  const [refreshingSlug, setRefreshingSlug] = useState(null);
+  useEffect(() => { const t = setTimeout(() => setDebounced(q.trim()), 300); return () => clearTimeout(t); }, [q]);
+  useEffect(() => { setPage(1); }, [debounced]);
+  useEffect(() => {
+    if (!debounced) { setItems([]); setTotal(0); setLastUpdate(null); return; }
+    const controller = new AbortController();
+    setLoading(true);
+    const params = new URLSearchParams({ q: debounced, page: String(page), limit: "24" });
+    const t0 = performance.now();
+    fetch(`/api/games?${params.toString()}`, { signal: controller.signal })
+      .then((r) => r.ok ? r.json() : Promise.reject())
+      .then((payload) => {
+        const list = Array.isArray(payload) ? payload : (payload.items || []);
+        setItems(list.map((it) => normalizeGame(it, fallbackForSlug(it.slug) || {})));
+        const p = payload.pagination || { total: list.length, pages: 1 };
+        setTotal(p.total ?? list.length);
+        setTotalPages(p.pages ?? 1);
+        setElapsed(Math.round(performance.now() - t0));
+        const upd = list[0]?.updatedAt || payload.updatedAt;
+        if (upd) setLastUpdate(upd);
+      })
+      .catch(() => { setItems([]); setTotal(0); })
+      .finally(() => setLoading(false));
+    return () => controller.abort();
+  }, [debounced, page]);
+  const handleSelect = async (game) => {
+    const isStale = !game.updatedAt || Date.now() - new Date(game.updatedAt).getTime() > 12 * 60 * 60 * 1000;
+    if (!isStale) { onDetails(game); return; }
+    setRefreshingSlug(game.slug);
+    try {
+      const res = await fetch(`/api/games/${encodeURIComponent(game.slug)}/refresh`, { method: "POST" });
+      if (res.ok) {
+        const payload = await res.json();
+        onDetails(payload.game ?? game);
+      } else onDetails(game);
+    } catch { onDetails(game); } finally { setRefreshingSlug(null); }
+  };
+  return (
+    <section className="catalog-page">
+      <div className="page-intro"><div><span className="eyebrow">BUSCA</span><h1>Pesquisar jogos</h1><p>Digite para buscar por título. Se o jogo estiver desatualizado há mais de 12h, atualizaremos automaticamente ao clicar.</p></div><GameController size={58} weight="thin" /></div>
+      <label className="search-box" style={{ width: '100%', maxWidth: 640, marginBottom: 16 }}><MagnifyingGlass size={20} /><input value={q} onChange={(e) => setQ(e.target.value)} placeholder="Pesquisar... ex: Cyberpunk, Elden Ring" aria-label="Pesquisar jogos" autoFocus /></label>
+      {debounced && <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 12, color: 'var(--muted)', marginBottom: 12 }}><span>{loading ? "Buscando..." : `${total} jogos encontrados em ${elapsed}ms`}</span><span>{lastUpdate ? `Última atualização: ${formatDate(lastUpdate)}` : ""}</span></div>}
+      {!debounced ? <div className="empty-state"><MagnifyingGlass size={32} /><h2>Digite para pesquisar</h2><p>Resultados aparecem aqui com capa mesmo se não cadastrado (via IGDB).</p></div> : loading ? <div className="empty-state"><GameController size={32} /><h2>Buscando...</h2></div> : items.length ? <><div className="catalog-grid">{items.map((game) => (<div key={game.id} style={{ position: 'relative' }}>{refreshingSlug === game.slug && <div style={{ position: 'absolute', inset: 0, background: 'rgba(0,0,0,0.65)', display: 'grid', placeItems: 'center', zIndex: 2, borderRadius: 5 }}><span style={{ color: 'white', fontSize: 12 }}>Atualizando...</span></div>}<GameCard game={game} onDetails={handleSelect} /></div>))}</div><div style={{ display: 'flex', justifyContent: 'center', gap: 12, marginTop: 24 }}><button onClick={() => setPage((p) => Math.max(1, p - 1))} disabled={page <= 1} style={{ padding: '8px 16px', borderRadius: 8, border: '1px solid var(--line)', background: page <= 1 ? 'transparent' : 'var(--blue)', color: 'white', opacity: page <= 1 ? 0.5 : 1 }}>Anterior</button><span style={{ fontSize: 13, color: 'var(--muted)', alignSelf: 'center' }}>Página {page} de {totalPages}</span><button onClick={() => setPage((p) => Math.min(totalPages, p + 1))} disabled={page >= totalPages} style={{ padding: '8px 16px', borderRadius: 8, border: '1px solid var(--line)', background: page >= totalPages ? 'transparent' : 'var(--blue)', color: 'white', opacity: page >= totalPages ? 0.5 : 1 }}>Próxima</button></div></> : <div className="empty-state"><GameController size={32} /><h2>Nenhum jogo encontrado</h2><p>Tente outro termo.</p></div>}
+    </section>
+  );
+}
+
 function Methodology({ onClose }) {
   const closeRef = useRef(null);
   const previousFocus = useRef(null);
@@ -290,8 +354,10 @@ export function App() {
   useEffect(() => {
     const applyLocation = () => {
       const path = window.location.pathname;
+      const params = new URLSearchParams(window.location.search);
       if (path.startsWith("/catalogo")) { setSelected(null); setView("catalog"); }
       else if (path.startsWith("/rankings")) { setSelected(null); setView("rankings"); }
+      else if (path.startsWith("/busca")) { setSelected(null); setView("busca"); const q = params.get("q") || ""; setSearch(q); }
       else if (path.startsWith("/jogos/")) {
         const slug = decodeURIComponent(path.slice("/jogos/".length));
         const base = fallbackForSlug(slug) || normalizeGame({ slug, title: slug.replace(/-/g, " ") });
@@ -318,9 +384,18 @@ export function App() {
   const navigate = (next) => {
     setSelected(null);
     setView(next);
-    window.history.pushState({}, "", next === "home" ? "/" : `/${next === "catalog" ? "catalogo" : "rankings"}`);
+    const path = next === "home" ? "/" : next === "catalog" ? "/catalogo" : next === "busca" ? `/busca${search ? `?q=${encodeURIComponent(search)}` : ""}` : "/rankings";
+    window.history.pushState({}, "", path);
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
+  useEffect(() => {
+    if (view === "busca") {
+      const q = search ? `?q=${encodeURIComponent(search)}` : "";
+      if (window.location.pathname !== "/busca" || window.location.search !== q) {
+        window.history.replaceState({}, "", `/busca${q}`);
+      }
+    }
+  }, [search, view]);
   const details = (game) => {
     if (!game) return navigate("rankings");
     const normalized = normalizeGame(game, fallbackForSlug(game.slug) || {});
@@ -329,5 +404,16 @@ export function App() {
     window.scrollTo({ top: 0, behavior: "smooth" });
     loadDetail(normalized.slug, normalized);
   };
-  return <div className="app-shell"><Header view={selected ? "home" : view} onNavigate={navigate} search={search} setSearch={setSearch} />{loading && <div className="loading-bar" aria-label="Carregando dados" />}<main>{selected ? <Detail game={selected} onBack={() => navigate("home")} onMethodology={() => setMethodology(true)} /> : view === "catalog" ? <Catalog data={data} query={search} onDetails={details} /> : view === "rankings" ? <Rankings data={data} onDetails={details} /> : <Home data={data} onDetails={details} onMethodology={() => setMethodology(true)} />}</main><footer><span>BAB-RANK</span><span>Dados públicos, rankings transparentes.</span><button onClick={() => setMethodology(true)}>Metodologia</button>{stale && <small>Últimos dados válidos · {formatDate(data.updatedAt)}</small>}</footer>{methodology && <Methodology onClose={() => setMethodology(false)} />}</div>;
+  const handleHeaderSearch = (value) => {
+    setSearch(value);
+    if (value.trim() && view !== "busca" && !selected) {
+      setView("busca");
+      window.history.pushState({}, "", `/busca?q=${encodeURIComponent(value.trim())}`);
+    } else if (!value.trim() && view === "busca") {
+      navigate("home");
+    } else if (view === "busca") {
+      window.history.replaceState({}, "", `/busca${value.trim() ? `?q=${encodeURIComponent(value.trim())}` : ""}`);
+    }
+  };
+  return <div className="app-shell"><Header view={selected ? "home" : view} onNavigate={navigate} search={search} setSearch={handleHeaderSearch} />{loading && <div className="loading-bar" aria-label="Carregando dados" />}<main>{selected ? <Detail game={selected} onBack={() => navigate("home")} onMethodology={() => setMethodology(true)} /> : view === "catalog" ? <Catalog data={data} query={search} onDetails={details} /> : view === "rankings" ? <Rankings data={data} onDetails={details} /> : view === "busca" ? <SearchPage initialQuery={search} onDetails={details} /> : <Home data={data} onDetails={details} onMethodology={() => setMethodology(true)} />}</main><footer><span>BAB-RANK</span><span>Dados públicos, rankings transparentes.</span><button onClick={() => setMethodology(true)}>Metodologia</button>{stale && <small>Últimos dados válidos · {formatDate(data.updatedAt)}</small>}</footer>{methodology && <Methodology onClose={() => setMethodology(false)} />}</div>;
 }
