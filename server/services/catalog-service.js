@@ -7,13 +7,13 @@ function rankingView(game, index, field = "score") {
   return {
     ...game,
     rank: index + 1,
-    score: Number(game[field].toFixed(1)),
+    score: Number(Number(game[field] ?? 0).toFixed(1)),
     metric:
       field === "historicalPopularity"
         ? { type: "popularity", value: game[field], label: "Popularidade histórica" }
         : { type: "players", value: game.currentPlayers, label: "Jogadores Steam" },
     source: field === "historicalPopularity" ? "igdb" : "bab-rank",
-    updatedAt: mockUpdatedAt,
+    updatedAt: game.updatedAt ?? mockUpdatedAt,
   };
 }
 
@@ -38,6 +38,7 @@ export function createCatalogService({ repository } = {}) {
         ? rankingView(featuredGame, current.findIndex((game) => game.id === featuredGame.id))
         : (week[0] ?? null);
 
+      const latestUpdate = [...games].map(g => g.updatedAt).filter(Boolean).sort().pop() ?? mockUpdatedAt;
       return {
         hero,
         topFive: week,
@@ -48,9 +49,9 @@ export function createCatalogService({ repository } = {}) {
           label: "Maior índice BAB-RANK",
           value: game.score,
           game,
-          achievedAt: "2026-08-24T12:00:00.000Z",
+          achievedAt: game.updatedAt ?? latestUpdate,
         })),
-        updatedAt: mockUpdatedAt,
+        updatedAt: latestUpdate,
         sourceStatus: { steam: "fresh", epic: "fresh", igdb: "fresh" },
         isFallback: !repository,
       };
@@ -63,12 +64,13 @@ export function createCatalogService({ repository } = {}) {
         .sort((a, b) => b[field] - a[field])
         .map((game, index) => rankingView(game, index, field));
       const start = (page - 1) * limit;
+      const latestUpdate = ranked[0]?.updatedAt ?? mockUpdatedAt;
       return {
         items: ranked.slice(start, start + limit),
         pagination: { page, limit, total: ranked.length, pages: Math.ceil(ranked.length / limit) },
         period,
         store,
-        updatedAt: mockUpdatedAt,
+        updatedAt: latestUpdate,
         sourceStatus: { steam: "fresh", epic: "fresh", igdb: "fresh" },
       };
     },
@@ -93,7 +95,7 @@ export function createCatalogService({ repository } = {}) {
 
     async game(slug) {
       const game = (await source.listGames()).find((item) => item.slug === slug);
-      return game ? { ...game, updatedAt: mockUpdatedAt } : null;
+      return game ? { ...game, updatedAt: game.updatedAt ?? mockUpdatedAt } : null;
     },
   };
 }

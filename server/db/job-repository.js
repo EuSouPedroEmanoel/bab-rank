@@ -140,17 +140,6 @@ export async function createJobRepository({ databaseUrl, pool: suppliedPool } = 
         const known = await client.query(`SELECT external_id AS "externalId", game_id AS "gameId"
           FROM store_listings WHERE store = $1 AND external_id = ANY($2::text[])`, [source, entries.map((entry) => String(entry.externalId))]);
         const gameByExternalId = new Map(known.rows.map((row) => [row.externalId, row.gameId]));
-        // Auto-cria jogos faltantes para snapshots de ranking (Steam/Epic) — garante que rankings externos populem o banco mesmo sem IGDB
-        for (const entry of entries) {
-          const ext = String(entry.externalId);
-          if (gameByExternalId.has(ext)) continue;
-          const slug = `${source}-${ext.toLowerCase().replace(/[^a-z0-9]+/g, "-")}`;
-          const title = (entry.title && entry.title.trim()) ? entry.title.trim() : `Jogo ${ext}`;
-          const inserted = await client.query(`INSERT INTO games (slug, title) VALUES ($1, $2) ON CONFLICT (slug) DO UPDATE SET title = EXCLUDED.title RETURNING id`, [slug, title]);
-          const newGameId = inserted.rows[0].id;
-          await client.query(`INSERT INTO store_listings (game_id, store, external_id, url) VALUES ($1, $2, $3, $4) ON CONFLICT (store, external_id) DO NOTHING`, [newGameId, source, ext, storeUrl(source, ext, entry.url)]);
-          gameByExternalId.set(ext, newGameId);
-        }
         const snapshot = await client.query(`INSERT INTO ranking_snapshots (source, status, captured_at, total_entries)
           VALUES ($1, 'success', $2, $3) RETURNING id`, [source, capturedAt, entries.length]);
         for (const entry of entries) {

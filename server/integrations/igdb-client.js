@@ -41,11 +41,26 @@ export function createIgdbClient({ clientId, clientSecret, fetchImpl, now = () =
     query,
     async listCatalog({ limit = 100, offset = 0, updatedAfter } = {}) {
       const filter = updatedAfter ? ` & updated_at > ${Math.floor(new Date(updatedAfter).getTime() / 1000)}` : "";
-      const result = await query("games", `fields id,name,slug,summary,storyline,first_release_date,rating,aggregated_rating,total_rating,follows,hypes,cover.image_id,screenshots.image_id,genres.id,genres.name,external_games.category,external_games.uid; where external_games.category = (1,26) & version_parent = null${filter}; sort total_rating desc; limit ${limit}; offset ${offset};`);
+      // busca jogos principais populares (hypes) para garantir overlap com Steam/Epic, sem filtrar mods via external_games (tratado no normalizer)
+      const result = await query("games", `fields id,name,slug,summary,storyline,first_release_date,rating,aggregated_rating,total_rating,follows,hypes,cover.image_id,screenshots.image_id,genres.id,genres.name,external_games.category,external_games.external_game_source,external_games.uid,game_type; where game_type = 0 & parent_game = null & version_parent = null & hypes > 5${filter}; sort hypes desc; limit ${limit}; offset ${offset};`);
       return result.map(normalizeIgdbGame);
     },
     async listHistoricalPopularity({ limit = 100, offset = 0 } = {}) {
       const result = await query("games", `fields id,name,slug,rating,aggregated_rating,total_rating,follows,hypes,cover.image_id,genres.id,genres.name,external_games.category,external_games.uid; where version_parent = null; sort total_rating desc; limit ${limit}; offset ${offset};`);
+      return result.map(normalizeIgdbGame);
+    },
+    async getGameBySlug(slug) {
+      const result = await query("games", `fields id,name,slug,summary,storyline,first_release_date,rating,aggregated_rating,total_rating,follows,hypes,cover.image_id,screenshots.image_id,genres.id,genres.name,external_games.category,external_games.external_game_source,external_games.uid; where slug = "${String(slug).replace(/"/g, '\\"')}" & version_parent = null; limit 1;`);
+      return result[0] ? normalizeIgdbGame(result[0]) : null;
+    },
+    async searchGames(q, { limit = 10 } = {}) {
+      const clean = String(q).replace(/"/g, '\\"').trim();
+      if (!clean) return [];
+      const result = await query("games", `fields id,name,slug,summary,cover.image_id,screenshots.image_id,genres.id,genres.name,external_games.category,external_games.external_game_source,external_games.uid,rating,total_rating; search "${clean}"; limit ${limit};`);
+      if (!result.length) {
+        const alt = await query("games", `fields id,name,slug,summary,cover.image_id,genres.id,genres.name,external_games.category,external_games.external_game_source,external_games.uid,rating,total_rating; where name ~ "${clean}"* & version_parent = null; limit ${limit};`);
+        return alt.map(normalizeIgdbGame);
+      }
       return result.map(normalizeIgdbGame);
     },
   };

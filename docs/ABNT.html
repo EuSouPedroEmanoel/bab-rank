@@ -247,43 +247,44 @@ FATEC</h1>
 Back-End / Banco de Dados</p>
 <hr />
 <h2
-id="bab-steam-epic-evolução-do-projeto-steamtwo-com-integração-postgresql-e-docker-compose">BAB-STEAM-EPIC:
-Evolução do Projeto SteamTwo com Integração PostgreSQL e Docker
-Compose</h2>
+id="bab-rank-evolução-do-projeto-steamtwo-com-integração-postgresql-docker-compose-e-apis-externas">BAB-RANK:
+Evolução do Projeto SteamTwo com Integração PostgreSQL, Docker Compose e
+APIs Externas</h2>
 <p><strong>Autor:</strong> Pedro Emanoel da Silva de Oliveira<br />
 <strong>RA:</strong> __________ [INSERIR RA]</p>
 <p><strong>Orientador:</strong> [INSERIR NOME DO PROFESSOR]</p>
 <p><strong>Cidade — 2026</strong></p>
 <hr />
 <div style="text-align: center; margin-top: 40px;">
-<p><strong>BAB-STEAM-EPIC</strong><br/> Evolução do Projeto SteamTwo com
-Integração PostgreSQL e Docker Compose<br/><br/> Pedro Emanoel da Silva
-de Oliveira<br/> RA: __________<br/><br/> Trabalho apresentado como
-requisito da disciplina Projeto Atribuído<br/></p>
+<p><strong>BAB-RANK</strong><br/> Evolução do Projeto SteamTwo com
+Integração PostgreSQL, Docker Compose e APIs Externas<br/><br/> Pedro
+Emanoel da Silva de Oliveira<br/> RA: __________<br/><br/> Trabalho
+apresentado como requisito da disciplina Projeto Atribuído<br/></p>
 </div>
 <hr />
 <h2 id="folha-de-rosto">FOLHA DE ROSTO</h2>
-<p><strong>BAB-STEAM-EPIC</strong> — Catálogo de jogos com dashboard de
+<p><strong>BAB-RANK</strong> — Catálogo de jogos com dashboard de
 popularidade da Steam e Epic Games, evoluído a partir de
 https://github.com/DavidSilvaProg/steamtwo</p>
 <ul>
 <li><strong>Novo repositório:</strong>
-<code>https://github.com/&lt;SEU-USUARIO&gt;/bab-steam-epic</code>
-[INSERIR LINK FINAL]</li>
+<code>https://github.com/&lt;SEU-USUARIO&gt;/bab-rank</code> [INSERIR
+LINK FINAL]</li>
 <li><strong>Pasta local:</strong>
-<code>/home/pedro/dev/Fatec/bab-steam-epic</code></li>
+<code>/home/pedro/dev/Fatec/bab-rank</code></li>
 <li><strong>Integrante:</strong> Pedro Emanoel da Silva de Oliveira —
 RA: __________</li>
 </ul>
-<p>Trabalho desenvolvido individualmente conforme rubrica (10
-pontos).</p>
+<p>Trabalho desenvolvido individualmente conforme rubrica (10 pontos).
+Pasta renomeada de <code>bab-steam-epic</code> para
+<code>bab-rank</code> em 31/08/2026.</p>
 <hr />
 <h2 id="sumário">SUMÁRIO</h2>
 <ol type="1">
 <li>Introdução</li>
 <li>Referencial Teórico — SteamTwo</li>
 <li>Metodologia e Integração Back-End / Banco de Dados</li>
-<li>Melhorias Implementadas</li>
+<li>Melhorias Implementadas (6 itens documentados)</li>
 <li>Instruções de Execução</li>
 <li>Testes e Resultados</li>
 <li>Evidências de Funcionamento (Prints)</li>
@@ -292,18 +293,20 @@ pontos).</p>
 </ol>
 <hr />
 <h2 id="introdução">1. INTRODUÇÃO</h2>
-<p>O projeto BAB-STEAM-EPIC tem como objetivo evoluir o projeto-base
-SteamTwo, consolidando a integração entre front-end (React/Vite),
-back-end (Node.js/Express) e banco de dados (PostgreSQL 17), conforme
-exigências da rubrica:</p>
+<p>O projeto BAB-RANK tem como objetivo evoluir o projeto-base SteamTwo,
+consolidando a integração entre front-end (React/Vite), back-end
+(Node.js/Express) e banco de dados (PostgreSQL 17), conforme exigências
+da rubrica:</p>
 <ul>
 <li>3,0 pts — back-end funcionando e integrado ao PostgreSQL</li>
-<li>3,0 pts — melhorias relevantes</li>
+<li>3,0 pts — melhorias relevantes autorais</li>
 <li>2,0 pts — integração, testes e qualidade técnica</li>
 <li>2,0 pts — PDF completo conforme ABNT</li>
 </ul>
 <p>O projeto foi desenvolvido solo, com foco prioritário na integração
-via Docker Compose.</p>
+via Docker Compose e população via APIs externas (IGDB, Steam, Epic). O
+nome foi alterado de <code>steamtwo</code> para <code>bab-rank</code> e
+a logo do site foi refeita (<code>BAB RANK</code> com coroa).</p>
 <hr />
 <h2 id="referencial-steamtwo">2. REFERENCIAL — STEAMTWO</h2>
 <p>Funcionalidades originais:</p>
@@ -322,12 +325,15 @@ fontes</li>
 <code>node-pg-migrate</code>
 (<code>migrations/001_create_steamtwo_domain.js</code>),
 <code>vitest + supertest</code>.</p>
+<p>Problema original: banco vazio sem seed; IGDB <code>popularity</code>
+removido da API (400), rankings com ranks duplicados e sem criação de
+jogos.</p>
 <hr />
 <h2 id="integração-back-end-com-banco-de-dados">3. INTEGRAÇÃO BACK-END
 COM BANCO DE DADOS</h2>
 <h3 id="arquitetura">3.1 Arquitetura</h3>
 <pre><code>[Browser] -&gt; [Vite/React em src/ | dist/client] 
-          -&gt; [Express server/index.js:14 em :3001]
+          -&gt; [Express server/index.js:14 em :3001 -&gt; BAB-RANK API]
           -&gt; [createPool(DATABASE_URL) server/db/pool.js:6]
           -&gt; [PostgreSQL 17 - postgres:17-alpine]
           -&gt; [Tabelas: games, genres, game_genres, store_listings, sync_runs, ranking_snapshots, ranking_entries, game_rankings]</code></pre>
@@ -341,6 +347,25 @@ COM BANCO DE DADOS</h2>
 <code>/api/health</code> retorna
 <code>{"status":"ok","database":{"status":"connected"}}</code> (validado
 em <code>curl http://127.0.0.1:3001/api/health</code>)</li>
+<li><strong>Correção 1 —
+<code>server/db/job-repository.js:118</code>:</strong>
+<code>jsonb_build_object('records',$4::int)</code> — PG17 exigia cast,
+erro <code>could not determine data type of parameter $4</code></li>
+<li><strong>Correção 2 —
+<code>server/db/job-repository.js:50</code>:</strong> distinção Pool vs
+Client via <code>totalCount</code> — erro
+<code>Client has already been connected</code></li>
+<li><strong>Correção 3 —
+<code>server/db/catalog-read-repository.js:32</code>:</strong>
+adicionado <code>g.updated_at AS "updatedAt"</code> e
+<code>mapGame</code> com <code>updatedAt</code>, <code>GROUP BY</code>
+inclui <code>g.updated_at</code></li>
+<li><strong>Correção 4 —
+<code>server/services/catalog-service.js:16</code>:</strong>
+<code>rankingView</code> usa
+<code>game.updatedAt ?? mockUpdatedAt</code> e <code>dashboard</code>
+usa <code>latestUpdate</code> real do banco, não hardcoded
+<code>2026-08-24</code></li>
 </ul>
 <h3 id="migrações">3.2 Migrações</h3>
 <ul>
@@ -353,19 +378,24 @@ imutáveis)</li>
 <code>npm run db:rollback</code> (down) — testado:
 <code>MIGRATION 001_create_steamtwo_domain (UP)</code> com
 <code>CREATE TABLE</code> e <code>Migrations complete!</code></li>
-<li>Evidência: <code>SELECT name, run_on FROM pgmigrations;</code>
-retorna <code>001_create_steamtwo_domain | 2026-08-31</code>, e
-<code>\dt</code> lista 9 relações</li>
+<li>Evidência atual: <code>SELECT name, run_on FROM pgmigrations;</code>
+retorna <code>001_create_steamtwo_domain | 2026-08-31</code>,
+<code>\dt</code> lista 9 relações,
+<code>SELECT count(*) FROM games</code> = 239</li>
 </ul>
 <h3 id="docker-compose">3.3 Docker Compose</h3>
 <p><strong>Antes (original):</strong> apenas <code>postgres</code> em
 <code>docker-compose.yml:1</code> com <code>5432:5432</code></p>
-<p><strong>Depois (BAB-STEAM-EPIC):</strong></p>
+<p><strong>Depois (BAB-RANK):</strong></p>
 <div class="sourceCode" id="cb2"><pre
 class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">services</span><span class="kw">:</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">postgres</span><span class="kw">:</span><span class="co"> # postgres:17-alpine, 5433:5432 (host 5433 para evitar conflito com postgres-db em 5432), healthcheck pg_isready, volume steamtwo_pgdata</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">postgres</span><span class="kw">:</span><span class="co"> # postgres:17-alpine, 5433:5432 (host 5433 para evitar conflito com postgres-db em 5432), healthcheck pg_isready, volume external bab-steam-epic_steamtwo_pgdata</span></span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">api</span><span class="kw">:</span><span class="co"> # build Dockerfile (node:20-alpine, npm ci + npm run build), 3001:3001, DATABASE_URL=postgres://steamtwo:steamtwo@postgres:5432/steamtwo (interno), depends_on postgres healthy, healthcheck wget /api/health</span></span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">migrate</span><span class="kw">:</span><span class="co"> # mesmo build, command npm run db:migrate, depende de postgres healthy</span></span></code></pre></div>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">migrate</span><span class="kw">:</span><span class="co"> # mesmo build, command npm run db:migrate, depende de postgres healthy</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="fu">volumes</span><span class="kw">:</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">steamtwo_pgdata</span><span class="kw">:</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">external</span><span class="kw">:</span><span class="at"> </span><span class="ch">true</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">name</span><span class="kw">:</span><span class="at"> bab-steam-epic_steamtwo_pgdata</span><span class="co"> # preserva dados após rename bab-steam-epic -&gt; bab-rank</span></span></code></pre></div>
 <ul>
 <li><code>Dockerfile</code> multi-stage:
 <code>FROM node:20-alpine</code>, <code>npm ci</code>,
@@ -379,17 +409,43 @@ class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb2-1"><a href="
 <code>DATABASE_URL=postgres://steamtwo:steamtwo@postgres:5432/steamtwo</code>
 (interno)</li>
 <li>Validação: <code>docker compose ps</code> mostra
-<code>bab-steam-epic-postgres-1 healthy</code> e
-<code>bab-steam-epic-api-1 healthy</code>,
-<code>docker logs bab-steam-epic-api-1</code> mostra
-<code>SteamTwo API disponível na porta 3001</code></li>
+<code>bab-rank-postgres-1 healthy</code> e
+<code>bab-rank-api-1 healthy</code>,
+<code>docker logs bab-rank-api-1</code> mostra
+<code>BAB-RANK API disponível na porta 3001</code></li>
+</ul>
+<h3 id="população-via-api-externa">3.4 População via API Externa</h3>
+<p>Credenciais IGDB em <code>.env:4-5</code> com
+<code>TWITCH_CLIENT_ID=m75esjfuhrjb8cy9vv5e27hbzgif7p</code> e
+<code>TWITCH_CLIENT_SECRET=nni8jae31shtxon5enciwchay77637</code> (não
+commitado, <code>.gitignore:4</code>).</p>
+<ul>
+<li><strong>Fix IGDB:</strong>
+<code>server/integrations/igdb-client.js:44</code> trocou
+<code>popularity</code> (400 <code>Invalid field</code>) por
+<code>rating,aggregated_rating,total_rating,follows,hypes</code> e
+filtro <code>external_games.category=(1,26)</code> para garantir
+<code>store_listings</code>; <code>normalizers.js:22</code> fallback
+para <code>total_rating</code></li>
+<li><strong>Syncs executados:</strong>
+<ul>
+<li><code>npm run sync:catalog</code> → 100 jogos (IGDB total_rating
+desc)</li>
+<li><code>npm run sync:popularity</code> → 100</li>
+<li><code>npm run sync:rankings</code> → 139 (steam 119 + epic 20) com
+reindex <code>rank=index+1</code>
+(<code>server/jobs/rankings.js:28</code>) para evitar
+<code>duplicate key ranking_entries_uniq_snapshot_id_position</code> e
+auto-criação de <code>games</code> faltantes
+(<code>job-repository.js:142</code>)</li>
+</ul></li>
+<li><strong>DB atual (31/08):</strong> <code>games=239</code>,
+<code>store_listings=239</code>, <code>genres=23</code>,
+<code>ranking_snapshots=2</code>, <code>ranking_entries=139</code>,
+<code>sync_runs=14</code></li>
 </ul>
 <hr />
 <h2 id="melhorias-implementadas">4. MELHORIAS IMPLEMENTADAS</h2>
-<blockquote>
-<p>Esta seção deve ser expandida conforme melhorias autorais forem
-adicionadas. Estrutura sugerida para cada melhoria:</p>
-</blockquote>
 <table>
 <colgroup>
 <col style="width: 5%" />
@@ -412,92 +468,131 @@ adicionadas. Estrutura sugerida para cada melhoria:</p>
 <td>1</td>
 <td>Docker Compose completo</td>
 <td><code>docker-compose.yml:1</code>, <code>Dockerfile:1</code></td>
-<td>Evoluiu compose de 1 para 3 serviços, permitindo
-<code>docker compose up --build</code> reproduzível, sem dependência de
-Node local</td>
-<td><code>docker compose ps</code> healthy</td>
+<td>Evoluiu compose de 1 para 3 serviços (postgres+api+migrate), volume
+external para preservar após rename,
+<code>docker compose up --build</code> reproduzível</td>
+<td><code>docker compose ps</code> healthy,
+<code>bab-rank-api:1</code></td>
 </tr>
 <tr>
 <td>2</td>
-<td>Mapeamento de porta 5433</td>
-<td><code>docker-compose.yml:9</code>, <code>.env:3</code></td>
-<td>Evita conflito com <code>postgres-db</code> (5432) já em uso,
-documentado</td>
-<td><code>docker ps</code> 0.0.0.0:5433-&gt;5432</td>
+<td>Mapeamento porta 5433 + rename</td>
+<td><code>docker-compose.yml:9</code>, <code>.env:3</code>,
+<code>package.json:2</code></td>
+<td>Evita conflito <code>postgres-db</code> 5432, pasta
+<code>bab-rank</code>, <code>package.json</code> name
+<code>bab-rank</code>, <code>index.html</code> title
+<code>BAB-RANK</code></td>
+<td><code>docker ps 0.0.0.0:5433-&gt;5432</code></td>
 </tr>
 <tr>
 <td>3</td>
-<td>[INSERIR] Filtros/busca avançada</td>
-<td><code>src/...</code></td>
-<td>Busca com debounce, filtro por popularidade, ordenação</td>
-<td>Print catálogo</td>
+<td>Logo BAB-RANK</td>
+<td><code>src/App.jsx:66</code>, <code>src/styles.css:12</code></td>
+<td>Brand <code>BAB RANK</code> com
+<code>&lt;Crown weight=fill&gt;</code> azul,
+<code>display:inline-flex</code>, footer <code>BAB-RANK</code></td>
+<td>Print <code>/</code> header</td>
 </tr>
 <tr>
 <td>4</td>
-<td>[INSERIR] Dashboard</td>
-<td><code>src/...</code></td>
-<td>Gráfico 7 dias, card recorde</td>
-<td>Print dashboard</td>
+<td>IGDB fix + população externa</td>
+<td><code>igdb-client.js:44</code>, <code>normalizers.js:22</code>,
+<code>job-repository.js:142</code></td>
+<td>Corrigiu 400 popularity, filtro Steam/Epic, auto-cria jogos em
+rankings</td>
+<td><code>sync:catalog 100</code>, <code>games=239</code></td>
 </tr>
 <tr>
 <td>5</td>
-<td>[INSERIR] Validação zod + tratamento erros</td>
-<td><code>server/routes/...</code></td>
-<td>Middleware padronizado</td>
-<td>Teste api 200/400</td>
+<td>Top 100 Rankings</td>
+<td><code>src/App.jsx:102</code></td>
+<td>Reescrito <code>Rankings</code> para
+<code>GET /api/rankings?period=&amp;limit=100</code> com 3 botões
+(Agora/Semana/De sempre), mostra 100 linhas (antes só 5)</td>
+<td><code>curl /api/rankings?limit=100</code> → 100</td>
+</tr>
+<tr>
+<td>6</td>
+<td>Filtro quadro “Última Semana”</td>
+<td><code>src/App.jsx:74</code></td>
+<td>Home: <code>store</code> só afeta quadro <code>week</code> via
+<code>GET /api/rankings?period=week&amp;store=...&amp;limit=5</code>,
+hero/topFive permanecem <code>all</code> (pedido: não mudar tela
+toda)</td>
+<td>Print filtro Steam/Epic no quadro</td>
+</tr>
+<tr>
+<td>7</td>
+<td>Banner “Ver mais” 3 linhas</td>
+<td><code>src/App.jsx:68</code>, <code>src/styles.css:32</code></td>
+<td><code>Hero</code> com <code>useState expanded</code>,
+<code>.hero-summary.clamped { -webkit-line-clamp:3 }</code>, botão
+<code>Ver mais/Ver menos</code></td>
+<td>Print banner expandido</td>
+</tr>
+<tr>
+<td>8</td>
+<td>Data correta</td>
+<td><code>catalog-read-repository.js:32</code>,
+<code>catalog-service.js:16</code>, <code>src/App.jsx:142</code></td>
+<td>Backend retorna <code>updatedAt</code> real do banco
+(<code>g.updated_at</code>), frontend <code>Detail</code> usa
+<code>formatDate(game.updatedAt)</code> em vez de hardcoded
+<code>24 de ago. 2026</code></td>
+<td><code>curl /api/games/dcs-world-a-10c-warthog</code> →
+<code>2026-08-31</code>, detail
+<code>Última atualização: 31 de agosto de 2026</code></td>
 </tr>
 </tbody>
 </table>
-<p><em>Atualmente entregues: itens 1 e 2 (integração). Itens 3-5 são
-próximos passos para completar 3,0 pts de melhorias.</em></p>
 <hr />
 <h2 id="instruções-para-executar-o-projeto">5. INSTRUÇÕES PARA EXECUTAR
 O PROJETO</h2>
 <p>Requisitos: Docker 29+, Node 20+ (via fnm), Git</p>
 <div class="sourceCode" id="cb3"><pre
 class="sourceCode bash"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 1. Clonar (ou usar pasta local)</span></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> clone https://github.com/<span class="op">&lt;</span>SEU-USUARIO<span class="op">&gt;</span>/bab-steam-epic.git</span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> bab-steam-epic</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> clone https://github.com/<span class="op">&lt;</span>SEU-USUARIO<span class="op">&gt;</span>/bab-rank.git</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> bab-rank</span>
 <span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="co"># 2. Instalar</span></span>
 <span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="ex">fnm</span> exec <span class="at">--using</span><span class="op">=</span>lts-latest npm install</span>
 <span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="co"># 3. Configurar env (não commitar .env)</span></span>
 <span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="fu">cp</span> .env.example .env</span>
-<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Editar se necessário: DATABASE_URL=postgres://steamtwo:steamtwo@localhost:5433/steamtwo</span></span>
-<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a><span class="co"># 4. Subir banco + api via Docker Compose (recomendado)</span></span>
-<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> compose up <span class="at">-d</span> <span class="at">--build</span></span>
-<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a><span class="co"># ou apenas postgres para dev local:</span></span>
-<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a><span class="co"># docker compose up -d postgres</span></span>
-<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a><span class="co"># 5. Migrações</span></span>
-<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a><span class="ex">fnm</span> exec <span class="at">--using</span><span class="op">=</span>lts-latest npm run db:migrate</span>
-<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a><span class="co"># Reverter se necessário: fnm exec --using=lts-latest npm run db:rollback</span></span>
-<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a><span class="co"># 6. Validar integração</span></span>
-<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a><span class="ex">curl</span> http://127.0.0.1:3001/api/health</span>
-<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a><span class="co"># Esperado: {&quot;status&quot;:&quot;ok&quot;,&quot;database&quot;:{&quot;status&quot;:&quot;connected&quot;}}</span></span>
-<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a><span class="co"># 7. Dev local (sem Docker api)</span></span>
-<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a><span class="ex">fnm</span> exec <span class="at">--using</span><span class="op">=</span>lts-latest npm run dev:api  <span class="co"># :3001</span></span>
-<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a><span class="ex">fnm</span> exec <span class="at">--using</span><span class="op">=</span>lts-latest npm run dev      <span class="co"># :5173</span></span>
-<span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a><span class="co"># 8. Produção via Docker (api serve front)</span></span>
-<span id="cb3-30"><a href="#cb3-30" aria-hidden="true" tabindex="-1"></a><span class="co"># Após build, acessar http://127.0.0.1:3001/</span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Editar: DATABASE_URL=postgres://steamtwo:steamtwo@localhost:5433/steamtwo</span></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a><span class="co">#         TWITCH_CLIENT_ID=m75esjfuhrjb8cy9vv5e27hbzgif7p</span></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a><span class="co">#         TWITCH_CLIENT_SECRET=nni8jae31shtxon5enciwchay77637</span></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a><span class="co"># 4. Subir banco + api via Docker Compose (recomendado)</span></span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> compose up <span class="at">-d</span> <span class="at">--build</span></span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a><span class="co"># ou apenas postgres para dev local:</span></span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a><span class="co"># docker compose up -d postgres</span></span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a><span class="co"># 5. Migrações</span></span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a><span class="ex">fnm</span> exec <span class="at">--using</span><span class="op">=</span>lts-latest npm run db:migrate</span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a><span class="co"># Reverter se necessário: fnm exec --using=lts-latest npm run db:rollback</span></span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a><span class="co"># 6. Popular via API externa</span></span>
+<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a><span class="ex">fnm</span> exec <span class="at">--using</span><span class="op">=</span>lts-latest npm run sync:catalog    <span class="co"># 100 IGDB</span></span>
+<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a><span class="ex">fnm</span> exec <span class="at">--using</span><span class="op">=</span>lts-latest npm run sync:popularity <span class="co"># 100</span></span>
+<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a><span class="ex">fnm</span> exec <span class="at">--using</span><span class="op">=</span>lts-latest npm run sync:rankings   <span class="co"># 139 Steam/Epic</span></span>
+<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a><span class="co"># 7. Validar integração</span></span>
+<span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a><span class="ex">curl</span> http://127.0.0.1:3001/api/health</span>
+<span id="cb3-30"><a href="#cb3-30" aria-hidden="true" tabindex="-1"></a><span class="co"># Esperado: {&quot;status&quot;:&quot;ok&quot;,&quot;database&quot;:{&quot;status&quot;:&quot;connected&quot;}}</span></span>
 <span id="cb3-31"><a href="#cb3-31" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-32"><a href="#cb3-32" aria-hidden="true" tabindex="-1"></a><span class="co"># 9. Testes</span></span>
-<span id="cb3-33"><a href="#cb3-33" aria-hidden="true" tabindex="-1"></a><span class="ex">fnm</span> exec <span class="at">--using</span><span class="op">=</span>lts-latest npm test</span>
-<span id="cb3-34"><a href="#cb3-34" aria-hidden="true" tabindex="-1"></a><span class="ex">fnm</span> exec <span class="at">--using</span><span class="op">=</span>lts-latest npm run build</span>
-<span id="cb3-35"><a href="#cb3-35" aria-hidden="true" tabindex="-1"></a><span class="ex">fnm</span> exec <span class="at">--using</span><span class="op">=</span>lts-latest npm run test:sites</span></code></pre></div>
+<span id="cb3-32"><a href="#cb3-32" aria-hidden="true" tabindex="-1"></a><span class="co"># 8. Dev local (sem Docker api)</span></span>
+<span id="cb3-33"><a href="#cb3-33" aria-hidden="true" tabindex="-1"></a><span class="ex">fnm</span> exec <span class="at">--using</span><span class="op">=</span>lts-latest npm run dev:api  <span class="co"># :3001</span></span>
+<span id="cb3-34"><a href="#cb3-34" aria-hidden="true" tabindex="-1"></a><span class="ex">fnm</span> exec <span class="at">--using</span><span class="op">=</span>lts-latest npm run dev      <span class="co"># :5173</span></span>
+<span id="cb3-35"><a href="#cb3-35" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-36"><a href="#cb3-36" aria-hidden="true" tabindex="-1"></a><span class="co"># 9. Produção via Docker (api serve front)</span></span>
+<span id="cb3-37"><a href="#cb3-37" aria-hidden="true" tabindex="-1"></a><span class="co"># Após build, acessar http://127.0.0.1:3001/ e /jogos/dcs-world-a-10c-warthog</span></span></code></pre></div>
 <p>Frontend: <code>http://127.0.0.1:3001/</code> (Docker) ou
 <code>http://127.0.0.1:5173/</code> (Vite dev)<br />
-API: <code>http://127.0.0.1:3001/api/health</code> e
-<code>http://127.0.0.1:3001/api/games</code></p>
-<p>Para IGDB: preencher <code>TWITCH_CLIENT_ID</code> e
-<code>TWITCH_CLIENT_SECRET</code> no <code>.env</code> e executar
-<code>npm run sync:catalog</code>, <code>sync:rankings</code>,
-<code>sync:popularity</code>.</p>
+API: <code>http://127.0.0.1:3001/api/health</code>,
+<code>/api/games</code>, <code>/api/rankings?limit=100</code>,
+<code>/api/dashboard?store=steam|epic</code></p>
 <hr />
 <h2 id="testes-realizados-e-resultados">6. TESTES REALIZADOS E
 RESULTADOS</h2>
@@ -513,7 +608,7 @@ RESULTADOS</h2>
 <th>Teste</th>
 <th>Comando</th>
 <th>Resultado esperado</th>
-<th>Resultado observado</th>
+<th>Resultado observado (31/08)</th>
 </tr>
 </thead>
 <tbody>
@@ -544,6 +639,13 @@ RESULTADOS</h2>
 <code>games, genres, game_genres, store_listings, sync_runs, ranking_snapshots, ranking_entries, game_rankings, pgmigrations</code></td>
 </tr>
 <tr>
+<td>Counts</td>
+<td><code>psql -c "SELECT count(*) FROM games"</code></td>
+<td>&gt;0</td>
+<td>OK — <code>239</code>, <code>store_listings 239</code>,
+<code>ranking_snapshots 2</code>, <code>ranking_entries 139</code></td>
+</tr>
+<tr>
 <td>/api/health</td>
 <td><code>curl :3001/api/health</code></td>
 <td><code>connected</code></td>
@@ -552,16 +654,36 @@ RESULTADOS</h2>
 </tr>
 <tr>
 <td>/api/games</td>
-<td><code>curl :3001/api/games</code></td>
+<td><code>curl :3001/api/games?limit=3</code></td>
 <td>200 + pagination</td>
-<td>OK — <code>{"items":[],"pagination":{"page":1,"limit":12}}</code>
-(vazio sem seed)</td>
+<td>OK — <code>items[0].slug dcs-world-a-10c-warthog</code>,
+<code>updatedAt 2026-08-31</code></td>
+</tr>
+<tr>
+<td>/api/games/:slug</td>
+<td><code>curl :3001/api/games/dcs-world-a-10c-warthog</code></td>
+<td>200 + updatedAt</td>
+<td>OK — <code>updatedAt 2026-08-31T18:16:14.028Z</code> (antes
+2026-08-24 mock)</td>
+</tr>
+<tr>
+<td>/api/rankings limit=100</td>
+<td><code>curl :3001/api/rankings?limit=100</code></td>
+<td>100</td>
+<td>OK — <code>len 100</code></td>
+</tr>
+<tr>
+<td>/api/dashboard store</td>
+<td><code>curl :3001/api/dashboard?store=steam</code></td>
+<td>topFive steam</td>
+<td>OK — hero <code>DCS World</code> steam, epic →
+<code>Disciples II</code></td>
 </tr>
 <tr>
 <td>/ (front)</td>
 <td><code>curl :3001/</code></td>
 <td>HTML</td>
-<td>OK — <code>&lt;!doctype html&gt;&lt;title&gt;SteamTwo</code></td>
+<td>OK — <code>&lt;title&gt;BAB-RANK</code></td>
 </tr>
 <tr>
 <td>npm test</td>
@@ -573,7 +695,7 @@ RESULTADOS</h2>
 <td>npm build</td>
 <td><code>npm run build</code></td>
 <td><code>dist/client/index.html</code></td>
-<td>OK — <code>vite v6.4.2 built in 2.7s</code></td>
+<td>OK — <code>vite 6.4.2 built 483KB</code></td>
 </tr>
 <tr>
 <td>test:sites</td>
@@ -585,66 +707,79 @@ RESULTADOS</h2>
 <td>Docker health</td>
 <td><code>docker compose ps</code></td>
 <td>healthy</td>
-<td>OK —
-<code>postgres healthy, api health: starting -&gt; healthy</code></td>
+<td>OK — <code>bab-rank-postgres-1 healthy</code>,
+<code>bab-rank-api-1 healthy</code></td>
 </tr>
 <tr>
-<td>Docker logs</td>
-<td><code>docker logs api</code></td>
-<td><code>porta 3001</code></td>
-<td>OK — <code>SteamTwo API disponível na porta 3001</code></td>
+<td>Banner</td>
+<td>clique Ver mais</td>
+<td>expande</td>
+<td>OK — <code>hero-summary clamped 3 linhas</code> →
+<code>expanded</code></td>
+</tr>
+<tr>
+<td>Detail data</td>
+<td><code>/jogos/dcs...</code></td>
+<td>data correta</td>
+<td>OK — <code>Última atualização: 31 de agosto de 2026</code></td>
 </tr>
 </tbody>
 </table>
-<p>Cobertura vitest: <code>tests/api/routes.test.js (4)</code>,
-<code>tests/domain/ranking.test.js (6)</code>,
-<code>tests/integrations</code> etc.</p>
 <hr />
 <h2 id="evidências-de-funcionamento">7. EVIDÊNCIAS DE FUNCIONAMENTO</h2>
-<blockquote>
-<p>Inserir aqui capturas de tela (substituir placeholders por prints
-reais):</p>
-</blockquote>
 <ol type="1">
-<li><code>docker compose ps</code> — postgres 5433 e api 3001
-healthy</li>
-<li><code>docker logs bab-steam-epic-api-1</code> — API na porta
-3001</li>
-<li><code>curl /api/health</code> — JSON connected</li>
-<li><code>psql \dt</code> e <code>pgmigrations</code></li>
-<li><code>npm test</code> — 23 passed</li>
-<li><code>npm run build</code> — dist/client + dist/server</li>
-<li>Frontend em <code>http://127.0.0.1:3001/</code> — dashboard e
-catálogo</li>
-<li>Dashboard com rankings (quando houver seed)</li>
+<li><code>docker compose ps</code> —
+<code>bab-rank-postgres-1 0.0.0.0:5433-&gt;5432 healthy</code>,
+<code>bab-rank-api-1 0.0.0.0:3001-&gt;3001 healthy</code></li>
+<li><code>docker logs bab-rank-api-1</code> —
+<code>BAB-RANK API disponível na porta 3001</code></li>
+<li><code>curl /api/health</code> —
+<code>{"status":"ok","database":{"status":"connected"}}</code></li>
+<li><code>psql \dt</code> e <code>pgmigrations</code> +
+<code>SELECT count(*) FROM games</code> → 239</li>
+<li><code>curl /api/games/dcs-world-a-10c-warthog</code> —
+<code>updatedAt 2026-08-31</code></li>
+<li><code>npm test</code> — 23 passed; <code>npm run build</code> —
+483KB; <code>test:sites</code> — 4 passed</li>
+<li>Frontend <code>http://127.0.0.1:3001/</code> — header
+<code>BAB RANK</code> com coroa, banner com Ver mais (3 linhas),
+dashboard com filtro quadro só, top strip</li>
+<li><code>http://127.0.0.1:3001/rankings</code> — 100 linhas com filtros
+Agora/Semana/De sempre</li>
+<li><code>http://127.0.0.1:3001/jogos/dcs-world-a-10c-warthog</code> —
+data 31/08/2026</li>
 </ol>
-<p>Para gerar evidências via terminal:</p>
+<p>Para gerar via terminal:</p>
 <div class="sourceCode" id="cb4"><pre
 class="sourceCode bash"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> compose ps <span class="op">&gt;</span> docs/evidencia-ps.txt</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="ex">curl</span> <span class="at">-s</span> http://127.0.0.1:3001/api/health <span class="kw">|</span> <span class="ex">jq</span> . <span class="op">&gt;</span> docs/evidencia-health.json</span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> exec bab-steam-epic-postgres-1 psql <span class="at">-U</span> steamtwo <span class="at">-d</span> steamtwo <span class="at">-c</span> <span class="st">&quot;\dt&quot;</span> <span class="op">&gt;</span> docs/evidencia-dt.txt</span></code></pre></div>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="ex">curl</span> <span class="at">-s</span> http://127.0.0.1:3001/api/games/dcs-world-a-10c-warthog <span class="kw">|</span> <span class="ex">jq</span> .updatedAt <span class="op">&gt;</span> docs/evidencia-updatedAt.txt</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> exec bab-rank-postgres-1 psql <span class="at">-U</span> steamtwo <span class="at">-d</span> steamtwo <span class="at">-c</span> <span class="st">&quot;\dt&quot;</span> <span class="op">&gt;</span> docs/evidencia-dt.txt</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> exec bab-rank-postgres-1 psql <span class="at">-U</span> steamtwo <span class="at">-d</span> steamtwo <span class="at">-c</span> <span class="st">&quot;SELECT count(*) FROM games;&quot;</span> <span class="op">&gt;</span> docs/evidencia-count.txt</span></code></pre></div>
 <hr />
 <h2 id="conclusão">8. CONCLUSÃO</h2>
 <p>A integração foi comprovada: Docker Compose orquestra Postgres 17 +
-API Node, migrações executam e <code>api/health</code> retorna
-<code>connected</code>. O sistema serve front e API na mesma porta em
-produção, mantendo compatibilidade com dev local (<code>5173</code> +
-<code>3001</code>). Próximos passos são expandir melhorias autorais
-(filtros, dashboard, validações) para completar 3,0 pts restantes.</p>
+API Node (com fixes de Pool e cast), migrações executam e
+<code>api/health</code> retorna <code>connected</code>. O sistema serve
+front e API na mesma porta em produção. A população via IGDB/Steam/Epic
+foi corrigida (popularity → total_rating, filtro Steam/Epic,
+auto-criação) e o banco contém 239 jogos com rankings. Melhorias de
+usabilidade (logo BAB-RANK, top 100, filtro quadro, banner Ver mais,
+data correta) atendem à rubrica de 3,0 pts.</p>
 <hr />
 <h2 id="referências">9. REFERÊNCIAS</h2>
 <ul>
 <li>DavidSilvaProg/steamtwo —
 https://github.com/DavidSilvaProg/steamtwo</li>
-<li>Documentação PostgreSQL 17, Docker, Node.js 20, Express 5, Vite
-6</li>
+<li>Documentação PostgreSQL 17, Docker, Node.js 20, Express 5, Vite 6,
+IGDB API, Twitch OAuth</li>
 <li>ABNT NBR 14724:2011 — Trabalhos acadêmicos</li>
 </ul>
 <hr />
 <p><strong>ANEXO:</strong> Link do repositório:
-<code>https://github.com/&lt;SEU-USUARIO&gt;/bab-steam-epic</code><br />
+<code>https://github.com/&lt;SEU-USUARIO&gt;/bab-rank</code><br />
 <strong>Autor:</strong> Pedro Emanoel da Silva de Oliveira — RA:
 __________ (inserir)<br />
-<strong>Data:</strong> Agosto/2026</p>
+<strong>Data:</strong> 31 de Agosto de 2026</p>
 </body>
 </html>

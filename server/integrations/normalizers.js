@@ -18,8 +18,8 @@ export function igdbImageUrl(imageId, size = "cover_big") {
 }
 
 export function normalizeIgdbGame(game) {
-  const steamId = game.external_games?.find((item) => item.category === 1)?.uid;
-  const epicId = game.external_games?.find((item) => item.category === 26)?.uid;
+  const steamId = game.external_games?.find((item) => (item.category ?? item.external_game_source) === 1)?.uid;
+  const epicId = game.external_games?.find((item) => (item.category ?? item.external_game_source) === 26)?.uid;
   const title = cleanText(game.name);
   return {
     source: "igdb",
