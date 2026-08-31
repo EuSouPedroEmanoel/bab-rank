@@ -41,11 +41,11 @@ export function createIgdbClient({ clientId, clientSecret, fetchImpl, now = () =
     query,
     async listCatalog({ limit = 100, offset = 0, updatedAfter } = {}) {
       const filter = updatedAfter ? ` & updated_at > ${Math.floor(new Date(updatedAfter).getTime() / 1000)}` : "";
-      const result = await query("games", `fields id,name,slug,summary,storyline,first_release_date,popularity,cover.image_id,screenshots.image_id,genres.id,genres.name,external_games.category,external_games.uid; where version_parent = null${filter}; sort popularity desc; limit ${limit}; offset ${offset};`);
+      const result = await query("games", `fields id,name,slug,summary,storyline,first_release_date,rating,aggregated_rating,total_rating,follows,hypes,cover.image_id,screenshots.image_id,genres.id,genres.name,external_games.category,external_games.uid; where external_games.category = (1,26) & version_parent = null${filter}; sort total_rating desc; limit ${limit}; offset ${offset};`);
       return result.map(normalizeIgdbGame);
     },
     async listHistoricalPopularity({ limit = 100, offset = 0 } = {}) {
-      const result = await query("games", `fields id,name,slug,popularity,cover.image_id,genres.id,genres.name,external_games.category,external_games.uid; where version_parent = null; sort popularity desc; limit ${limit}; offset ${offset};`);
+      const result = await query("games", `fields id,name,slug,rating,aggregated_rating,total_rating,follows,hypes,cover.image_id,genres.id,genres.name,external_games.category,external_games.uid; where version_parent = null; sort total_rating desc; limit ${limit}; offset ${offset};`);
       return result.map(normalizeIgdbGame);
     },
   };

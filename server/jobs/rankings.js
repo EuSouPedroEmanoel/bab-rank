@@ -25,10 +25,11 @@ export async function syncRankings({ repository, steam, epic, now } = {}) {
           metric: Math.max(current?.metric ?? 0, entry.metric ?? 0) || null,
         });
       }
-      const steamEntries = [...mergedSteam.values()].sort((a, b) => a.rank - b.rank);
+      const steamEntries = [...mergedSteam.values()].sort((a, b) => a.rank - b.rank).map((entry, index) => ({ ...entry, rank: index + 1 }));
+      const normalizedEpic = epicEntries.sort((a, b) => a.rank - b.rank).map((entry, index) => ({ ...entry, rank: index + 1 }));
       await Promise.all([
         repository.replaceRankingSnapshot({ source: "steam", capturedAt, entries: steamEntries }),
-        repository.replaceRankingSnapshot({ source: "epic", capturedAt, entries: epicEntries }),
+        repository.replaceRankingSnapshot({ source: "epic", capturedAt, entries: normalizedEpic }),
       ]);
       return { records: steamEntries.length + epicEntries.length, capturedAt, sources: { steam: steamEntries.length, epic: epicEntries.length } };
     },

@@ -31,7 +31,7 @@ export function normalizeIgdbGame(game) {
     heroUrl: igdbImageUrl(game.screenshots?.[0]?.image_id, "screenshot_huge"),
     genres: (game.genres ?? []).map((genre) => ({ externalId: String(genre.id), name: cleanText(genre.name) })).filter((genre) => genre.name),
     releaseDate: game.first_release_date ? new Date(game.first_release_date * 1000).toISOString() : null,
-    popularity: Number(game.popularity ?? game.popularity_primitives?.popularity ?? 0) || 0,
+    popularity: Number(game.total_rating ?? game.rating ?? game.aggregated_rating ?? game.popularity ?? game.popularity_primitives?.popularity ?? 0) || 0,
     stores: [
       steamId && { store: "steam", externalId: String(steamId) },
       epicId && { store: "epic", externalId: String(epicId) },
