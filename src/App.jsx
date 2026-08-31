@@ -73,7 +73,55 @@ function SafeImage({ src, alt, className = "", width = 320, priority = false, ti
   return <img src={url} alt={alt} loading={priority ? "eager" : "lazy"} fetchPriority={priority ? "high" : "auto"} decoding="async" crossOrigin={proxied ? "anonymous" : undefined} className={className} onError={() => setUrl(fallback)} {...props} />;
 }
 function Trend({ value, compact = false }) { if (!value) return <span className="trend neutral">—</span>; const positive = value > 0; return <span className={`trend ${positive ? "positive" : "negative"}`}>{positive ? <ArrowUpRight size={compact ? 15 : 16} weight="bold" /> : <ArrowDownRight size={compact ? 15 : 16} weight="bold" />} {Math.abs(value)}</span>; }
-function Header({ view, onNavigate, search, setSearch }) { return <header className={`site-header ${view === "home" ? "site-header-overlay" : ""}`}><button className="brand" onClick={() => onNavigate("home")} aria-label="BAB-RANK, início"><Crown size={26} weight="fill" style={{marginRight:8, color:'var(--blue)', verticalAlign:'middle'}} /><span>BAB</span><b>RANK</b></button><nav aria-label="Navegação principal"><button className={view === "home" ? "active" : ""} onClick={() => onNavigate("home")}>Início</button><button className={view === "catalog" ? "active" : ""} onClick={() => onNavigate("catalog")}>Catálogo</button><button className={view === "rankings" ? "active" : ""} onClick={() => onNavigate("rankings")}>Rankings</button><button className={view === "busca" ? "active" : ""} onClick={() => onNavigate("busca")}>Buscar</button></nav><button onClick={() => onNavigate("busca")} aria-label="Buscar jogos" style={{ marginLeft: 'auto', display: 'inline-flex', alignItems: 'center', gap: 8, padding: '8px 14px', borderRadius: 20, border: '1px solid rgba(255,255,255,0.18)', background: 'rgba(255,255,255,0.08)', color: 'white', cursor: 'pointer' }}><MagnifyingGlass size={18} /> Buscar</button></header>; }
+function Header({ view, onNavigate, search, setSearch, onDetails }) {
+  const [input, setInput] = useState(search || "");
+  const [suggestions, setSuggestions] = useState([]);
+  const [showSug, setShowSug] = useState(false);
+  const [loadingSug, setLoadingSug] = useState(false);
+  const wrapRef = useRef(null);
+  useEffect(() => { setInput(search || ""); }, [search]);
+  useEffect(() => {
+    const q = input.trim();
+    if (q.length < 2) { setSuggestions([]); setLoadingSug(false); return; }
+    const t = setTimeout(async () => {
+      setLoadingSug(true);
+      try {
+        const res = await fetch(`/api/games?q=${encodeURIComponent(q)}&limit=5`);
+        if (!res.ok) throw new Error("busca falhou");
+        const payload = await res.json();
+        const list = Array.isArray(payload) ? payload : (payload.items || payload.games || payload.data || []);
+        const normalized = list.slice(0, 5).map((it) => normalizeGame(it, fallbackForSlug(it.slug) || {}));
+        setSuggestions(normalized);
+        setShowSug(true);
+      } catch { setSuggestions([]); } finally { setLoadingSug(false); }
+    }, 300);
+    return () => clearTimeout(t);
+  }, [input]);
+  useEffect(() => {
+    const handleClickOutside = (event) => { if (wrapRef.current && !wrapRef.current.contains(event.target)) setShowSug(false); };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+  const submit = (q = input) => {
+    const clean = q.trim();
+    setSearch(clean);
+    setShowSug(false);
+    if (clean) {
+      if (view === "busca") window.history.replaceState({}, "", `/busca?q=${encodeURIComponent(clean)}`);
+      else window.history.pushState({}, "", `/busca?q=${encodeURIComponent(clean)}`);
+      onNavigate("busca");
+    } else {
+      onNavigate("home");
+    }
+  };
+  const selectSuggestion = (game) => {
+    setInput(game.shortTitle || game.title);
+    setShowSug(false);
+    if (onDetails) onDetails(game);
+    else submit(game.title);
+  };
+  return <header className={`site-header ${view === "home" ? "site-header-overlay" : ""}`}><button className="brand" onClick={() => onNavigate("home")} aria-label="BAB-RANK, início"><Crown size={26} weight="fill" style={{marginRight:8, color:'var(--blue)', verticalAlign:'middle'}} /><span>BAB</span><b>RANK</b></button><nav aria-label="Navegação principal"><button className={view === "home" ? "active" : ""} onClick={() => onNavigate("home")}>Início</button><button className={view === "catalog" ? "active" : ""} onClick={() => onNavigate("catalog")}>Catálogo</button><button className={view === "rankings" ? "active" : ""} onClick={() => onNavigate("rankings")}>Rankings</button><button className={view === "busca" ? "active" : ""} onClick={() => onNavigate("busca")}>Buscar</button></nav><div ref={wrapRef} style={{ marginLeft: 'auto', position: 'relative', display: 'flex', alignItems: 'center', gap: 8 }}><label className="search-box" style={{ width: 320, maxWidth: '34vw' }}><MagnifyingGlass size={18} /><input value={input} onChange={(event) => { setInput(event.target.value); setShowSug(true); }} onFocus={() => input.trim().length >= 2 && setShowSug(true)} onKeyDown={(event) => { if (event.key === 'Enter') { event.preventDefault(); submit(); } if (event.key === 'Escape') setShowSug(false); }} placeholder="Pesquisar qualquer jogo..." aria-label="Pesquisar qualquer jogo" /></label><button onClick={() => submit()} aria-label="Buscar jogos" style={{ display: 'inline-flex', alignItems: 'center', gap: 6, padding: '8px 14px', borderRadius: 20, border: '1px solid rgba(255,255,255,0.18)', background: 'rgba(255,255,255,0.08)', color: 'white', cursor: 'pointer', whiteSpace: 'nowrap' }}><MagnifyingGlass size={16} /> Buscar</button>{showSug && (suggestions.length > 0 || loadingSug) && <div style={{ position: 'absolute', top: 'calc(100% + 8px)', left: 0, right: 0, background: '#0e141b', border: '1px solid var(--line)', borderRadius: 8, overflow: 'hidden', zIndex: 30, boxShadow: '0 12px 30px rgba(0,0,0,0.5)', minWidth: 320 }}><div style={{ maxHeight: 380, overflowY: 'auto' }}>{loadingSug ? <div style={{ padding: 12, fontSize: 12, color: 'var(--muted)', display: 'flex', alignItems: 'center', gap: 8 }}><span style={{ width: 12, height: 12, border: '2px solid var(--muted)', borderTopColor: 'transparent', borderRadius: '50%', display: 'inline-block', animation: 'spin 0.7s linear infinite' }} /> Buscando...</div> : suggestions.map((game) => <button key={game.id} onClick={() => selectSuggestion(game)} style={{ display: 'flex', gap: 10, alignItems: 'center', width: '100%', padding: '8px 10px', background: 'transparent', border: 0, borderBottom: '1px solid rgba(255,255,255,0.06)', cursor: 'pointer', textAlign: 'left' }}><SafeImage src={game.coverUrl} alt="" width={36} style={{ width: 36, height: 48, objectFit: 'cover', borderRadius: 4, flexShrink: 0 }} title={game.title} /><span style={{ minWidth: 0, flex: 1 }}><b style={{ display: 'block', fontSize: 12, color: 'white', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{game.shortTitle}</b><small style={{ fontSize: 10, color: 'var(--muted)', display: 'block', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{game.genres.slice(0, 2).join(' · ') || 'Jogo'}{game.isExternal ? ' · IGDB' : ''}</small></span><Score value={game.score} /></button>)}</div><button onClick={() => submit()} style={{ width: '100%', padding: '10px', background: 'rgba(255,255,255,0.04)', border: 0, borderTop: '1px solid var(--line)', fontSize: 11, color: 'var(--blue-2)', cursor: 'pointer', textAlign: 'center' }}>Ver todos os resultados para "{input.trim()}" →</button></div>}</div></header>;
+}
 function Score({ value, large = false }) { return <span className={large ? "score score-large" : "score"}>{formatScore(value)}</span>; }
 function Hero({ game, onDetails, onMethodology }) {
   const [expanded, setExpanded] = useState(false);
@@ -106,7 +154,9 @@ function Home({ data, onDetails, onMethodology }) {
   const week = weekOverride ?? data.week;
   return <><Hero game={data.hero} onDetails={() => onDetails(data.hero)} onMethodology={onMethodology} /><TopStrip items={data.topFive} onDetails={onDetails} /><section className="dashboard-grid"><div className="week-panel"><div className="section-head"><div><h2>ÚLTIMA SEMANA</h2><p>18–24 de ago. de 2026</p></div><StoreFilters value={store} onChange={setStore} /></div><WeekList items={week} onDetails={onDetails} /><button className="more-link" onClick={() => onDetails(null)}>Ver top 100 da semana <ArrowRight size={19} /></button></div><div className="alltime-panel"><div className="section-head"><div><h2>DE SEMPRE</h2><p>Os jogos com maior índice BAB-RANK de todos os tempos.</p></div></div><AllTime items={data.allTime} onDetails={onDetails} /><button className="more-link" onClick={() => onDetails(null)}>Ver todos os tempos <ArrowRight size={19} /></button></div><RecordCard record={data.records[0]} onDetails={onDetails} /></section></>;
 }
-function GameCard({ game, onDetails }) { return <button className="game-card" onClick={() => onDetails(game)}><SafeImage src={game.coverUrl} alt={`Capa de ${game.shortTitle}`} /><div><span className="game-card-score"><Score value={game.score} /></span><h3>{game.shortTitle}</h3><p>{game.genres.join(" · ")}</p><span className="card-stores">{game.stores.map(storeLabel).join(" · ")}</span></div></button>; }
+function GameCard({ game, onDetails }) {
+  return <button className="game-card" onClick={() => onDetails(game)} style={{ position: 'relative' }}><SafeImage src={game.coverUrl} alt={`Capa de ${game.shortTitle}`} title={game.title} /><div><span className="game-card-score" style={{ display:'flex', alignItems:'center', gap:6 }}><Score value={game.score} />{game.isExternal && <span style={{ fontSize:9, padding:'2px 6px', borderRadius:10, background:'rgba(8,119,255,0.18)', border:'1px solid rgba(8,119,255,0.35)', color:'#9cc9ff' }}>IGDB</span>}</span><h3>{game.shortTitle}</h3><p>{game.genres.join(" · ") || (game.isExternal ? "Jogo externo · IGDB" : "Sem gênero")}</p><span className="card-stores">{game.stores.length ? game.stores.map(storeLabel).join(" · ") : (game.isExternal ? "Disponível via IGDB" : "Sem loja vinculada")}</span></div></button>;
+}
 function Catalog({ data, query: initialQuery, onDetails }) {
   const [store, setStore] = useState("all");
   const [genre, setGenre] = useState("all");
@@ -415,5 +465,5 @@ export function App() {
       window.history.replaceState({}, "", `/busca${value.trim() ? `?q=${encodeURIComponent(value.trim())}` : ""}`);
     }
   };
-  return <div className="app-shell"><Header view={selected ? "home" : view} onNavigate={navigate} search={search} setSearch={handleHeaderSearch} />{loading && <div className="loading-bar" aria-label="Carregando dados" />}<main>{selected ? <Detail game={selected} onBack={() => navigate("home")} onMethodology={() => setMethodology(true)} /> : view === "catalog" ? <Catalog data={data} query={search} onDetails={details} /> : view === "rankings" ? <Rankings data={data} onDetails={details} /> : view === "busca" ? <SearchPage initialQuery={search} onDetails={details} /> : <Home data={data} onDetails={details} onMethodology={() => setMethodology(true)} />}</main><footer><span>BAB-RANK</span><span>Dados públicos, rankings transparentes.</span><button onClick={() => setMethodology(true)}>Metodologia</button>{stale && <small>Últimos dados válidos · {formatDate(data.updatedAt)}</small>}</footer>{methodology && <Methodology onClose={() => setMethodology(false)} />}</div>;
+  return <div className="app-shell"><Header view={selected ? "home" : view} onNavigate={navigate} search={search} setSearch={handleHeaderSearch} onDetails={details} />{loading && <div className="loading-bar" aria-label="Carregando dados" />}<main>{selected ? <Detail game={selected} onBack={() => navigate("home")} onMethodology={() => setMethodology(true)} /> : view === "catalog" ? <Catalog data={data} query={search} onDetails={details} /> : view === "rankings" ? <Rankings data={data} onDetails={details} /> : view === "busca" ? <SearchPage initialQuery={search} onDetails={details} /> : <Home data={data} onDetails={details} onMethodology={() => setMethodology(true)} />}</main><footer><span>BAB-RANK</span><span>Dados públicos, rankings transparentes.</span><button onClick={() => setMethodology(true)}>Metodologia</button>{stale && <small>Últimos dados válidos · {formatDate(data.updatedAt)}</small>}</footer>{methodology && <Methodology onClose={() => setMethodology(false)} />}</div>;
 }
