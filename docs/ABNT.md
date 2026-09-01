@@ -342,7 +342,7 @@ O `requestExternal` (`integrations/http.js:20`) encapsula `fetch` com `AbortCont
 
 ### 4.8 Data Correta, Busca Global “Pesquisar qualquer jogo”, Favoritos e Acessibilidade
 
-**Narrativa:** Esta é a melhoria mais transversal e, por isso, foi a última. O professor apontou que a data “24 de agosto de 2026” estava hard-coded; ao mesmo tempo, o assignment valoriza “novos filtros ou buscas” e “acessibilidade”. A solução uniu três frentes que parecem distintas mas compartilham o mesmo princípio: dados reais, não mocks.
+**Narrativa:** Esta é a melhoria mais transversal e, por isso, foi a última. Durante a auditoria do projeto-base, **identifiquei** que a data “24 de agosto de 2026” estava hard-coded em `src/App.jsx:144` e `server/mock/games.js:183` (`mockUpdatedAt`), exibindo sempre o mesmo dia mesmo com o banco atualizado; o assignment valoriza “novos filtros ou buscas” e “acessibilidade”. A solução uniu três frentes que parecem distintas mas compartilham o mesmo princípio: dados reais, não mocks.
 
 **a) Data real:** `catalog-read-repository.js:32` expõe `g.updated_at AS "updatedAt"`; `catalog-service.js:16` `rankingView` usa `game.updatedAt ?? mockUpdatedAt`; `src/App.jsx:198` `formatDate(lastUpdate || data.updatedAt)` e `src/App.jsx:144` `Atualizado em {formatDate(game.updatedAt)}` substituem `24 de ago.`. `GET /api/games/dcs-world-a-10c-warthog` agora retorna `2026-08-31T20:21:10.822Z` (`docs/evidencia-games.json`).
 

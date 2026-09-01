@@ -800,11 +800,14 @@ id="data-correta-busca-global-pesquisar-qualquer-jogo-favoritos-e-acessibilidade
 Data Correta, Busca Global “Pesquisar qualquer jogo”, Favoritos e
 Acessibilidade</h3>
 <p><strong>Narrativa:</strong> Esta é a melhoria mais transversal e, por
-isso, foi a última. O professor apontou que a data “24 de agosto de
-2026” estava hard-coded; ao mesmo tempo, o assignment valoriza “novos
-filtros ou buscas” e “acessibilidade”. A solução uniu três frentes que
-parecem distintas mas compartilham o mesmo princípio: dados reais, não
-mocks.</p>
+isso, foi a última. Durante a auditoria do projeto-base,
+<strong>identifiquei</strong> que a data “24 de agosto de 2026” estava
+hard-coded em <code>src/App.jsx:144</code> e
+<code>server/mock/games.js:183</code> (<code>mockUpdatedAt</code>),
+exibindo sempre o mesmo dia mesmo com o banco atualizado; o assignment
+valoriza “novos filtros ou buscas” e “acessibilidade”. A solução uniu
+três frentes que parecem distintas mas compartilham o mesmo princípio:
+dados reais, não mocks.</p>
 <p><strong>a) Data real:</strong>
 <code>catalog-read-repository.js:32</code> expõe
 <code>g.updated_at AS "updatedAt"</code>;
