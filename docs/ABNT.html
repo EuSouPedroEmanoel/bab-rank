@@ -93,7 +93,7 @@
     code span.vs { color: #4070a0; } /* VerbatimString */
     code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
   </style>
-  <link rel="stylesheet" href="/tmp/pandoc-tight.css" />
+  <link rel="stylesheet" href="docs/pandoc.css" />
 </head>
 <body>
 <header id="title-block-header">
@@ -1362,10 +1362,17 @@ para cache de <code>GET /api/games?q=</code> (hoje a busca refaz
 por cursor (<code>keyset</code>) em vez de <code>OFFSET</code>; cobrir o
 <code>1 failed</code> com <code>toBeGreaterThanOrEqual</code> e
 adicionar <code>Playwright</code> e2e para <code>Header</code> →
-<code>Busca</code> → <code>Detalhe</code> → <code>Favoritos</code>; e
+<code>Busca</code> → <code>Detalhe</code> → <code>Favoritos</code>;
 criar <code>CI</code> (<code>GitHub Actions</code>
 <code>docker compose up</code> + <code>npm test</code> +
-<code>pandoc</code>).</p>
+<code>pandoc</code>); <strong>e evoluir para perfis de usuário e
+análises de jogos ao estilo MyAnimeList</strong> — criar tabelas
+<code>profiles</code>, <code>user_lists</code> (jogando, concluído,
+dropado, favoritos) e <code>reviews</code> (nota 0–10, texto, spoilers,
+<code>helpful</code> votes), com página de perfil pública
+<code>/u/:username</code>, listas compartilháveis, estatísticas de tempo
+jogado e moderação, transformando o BAB-RANK de catálogo em
+comunidade.</p>
 <p>Em suma, o BAB-RANK cumpre os 10 pontos não porque lista 8 melhorias,
 mas porque cada melhoria, cada correção e cada evidência tem comando de
 reprodução, arquivo-fonte e saída auditada — exatamente o que o PDF
@@ -1445,5 +1452,106 @@ este arquivo identifica o integrante (solo) e o repositório entregue.
 (<code>.gitignore:4</code>). O volume
 <code>bab-steam-epic_steamtwo_pgdata</code> preserva dados após
 rename.</p>
+<hr />
+<h2 id="anexo-d-prints-do-site-inserir-capturas">ANEXO D — Prints do
+Site (inserir capturas)</h2>
+<blockquote>
+<p><strong>Como usar:</strong> Substitua cada bloco
+<code>INSERIR PRINT</code> pela captura real (<code>PNG/JPG</code>).
+<strong>Não force altura</strong> — use só largura para preservar
+proporção (já corrigido). Para gerar: <code>npm run dev</code> →
+<code>http://127.0.0.1:5173/</code> ou Docker
+<code>http://127.0.0.1:3001/</code> → <code>Ctrl+Shift+I</code> →
+<code>Device Toolbar</code> 1440×900, 390×844, 768×1024 →
+<code>Ctrl+Shift+P</code> → <code>Capture screenshot</code>.</p>
+</blockquote>
+<h3 id="d.1-home-hero-top-5-última-semana-de-sempre">D.1 — Home
+(<code>/</code>) — Hero + Top 5 + Última Semana + De Sempre</h3>
+<div style="text-align:center; margin: 8pt 0;">
+<p><img src="design-reference/implementation-1440.png" style="width:92%; height:auto; max-width:100%; display:block; margin:0 auto; border:1pt solid #d9e2ec;" alt="Figura D1 — Home com hero BAB-RANK, top strip e dashboard" /></p>
+</div>
+<p><em>Figura D1 — Home BAB-RANK (desktop 1440px). Fonte:
+<code>design-reference/implementation-1440.png</code>.
+<strong>Substituir se o hero/topFive mudou após
+<code>sync:rankings</code> 31/08.</strong></em></p>
+<h3
+id="d.2-catálogo-catalogo-filtros-lojagênero-busca-paginação-24pp">D.2 —
+Catálogo (<code>/catalogo</code>) — Filtros loja/gênero, busca,
+paginação 24pp</h3>
+<blockquote>
+<p><strong>INSERIR PRINT:</strong>
+<code>docs/prints/catalogo-1440.png</code> — deve mostrar
+<code>Biblioteca BAB-RANK</code>,
+<code>StoreFilters Todos/Steam/Epic</code>, <code>Gênero</code>,
+<code>Pesquisar jogos...</code>, <code>24 jogos em 141 páginas</code>,
+grade 24 cards com <code>IGDB</code> badge quando externo.
+<strong>Enquanto não houver captura, deixar este bloco de texto — não
+usar placeholder torto.</strong></p>
+</blockquote>
+<h3
+id="d.3-rankings-rankings-top-100-com-filtros-agorasemanade-sempre">D.3
+— Rankings (<code>/rankings</code>) — Top 100 com filtros
+Agora/Semana/De sempre</h3>
+<blockquote>
+<p><strong>INSERIR PRINT:</strong>
+<code>docs/prints/rankings-1440.png</code> —
+<code>Quem está no topo?</code>, <code>store-filter 3 botões</code>,
+<code>ranking-table</code> 1–100 com <code>Índice BAB-RANK</code> e
+<code>Variação</code>.</p>
+</blockquote>
+<h3 id="d.4-detalhe-jogosdcs-world-a-10c-warthog-data-31082026">D.4 —
+Detalhe (<code>/jogos/dcs-world-a-10c-warthog</code>) — Data
+31/08/2026</h3>
+<blockquote>
+<p><strong>INSERIR PRINT:</strong>
+<code>docs/prints/jogos-dcs-1440.png</code> —
+<code>DETALHE DO JOGO</code>, <code>DCS World: A-10C Warthog</code>,
+<code>Índice BAB-RANK 92/100</code>, <code>Abrir na Steam</code>,
+<code>Adicionar à lista</code>,
+<code>Última atualização: 31 de agosto de 2026</code>.</p>
+</blockquote>
+<h3 id="d.5-busca-global-buscaqeldenring-pesquisar-qualquer-jogo">D.5 —
+Busca Global (<code>/busca?q=elden+ring</code>) — “Pesquisar qualquer
+jogo”</h3>
+<blockquote>
+<p><strong>INSERIR PRINT:</strong>
+<code>docs/prints/busca-1440.png</code> — <code>BUSCA</code>, input
+<code>Pesquisar... ex: Elden Ring</code>, <code>suggestions</code>
+dropdown 5 itens + <code>Ver todos</code>, <code>items</code> com
+<code>coverUrl</code> mesmo sem cadastro (<code>isExternal</code>).</p>
+</blockquote>
+<h3 id="d.6-favoritos-favoritos-localstorage">D.6 — Favoritos
+(<code>/favoritos</code>) — localStorage</h3>
+<blockquote>
+<p><strong>INSERIR PRINT:</strong>
+<code>docs/prints/favoritos-1440.png</code> — <code>SUA COLEÇÃO</code>,
+<code>N jogos salvos</code>, <code>catalog-grid</code> com botão
+<code>BookmarkSimple fill</code>, <code>toast</code> “adicionado aos
+favoritos”.</p>
+</blockquote>
+<h3 id="d.7-mobile-390844-sem-overflow">D.7 — Mobile (<code>/</code>,
+390×844) — Sem overflow</h3>
+<div style="text-align:center; margin: 8pt 0;">
+<p><img src="design-reference/implementation-mobile-390.png" style="width:52%; height:auto; max-width:280px; display:block; margin:0 auto; border:1pt solid #d9e2ec;" alt="Figura D7 — Mobile 390px" /></p>
+</div>
+<p><em>Figura D7 — Mobile 390px sem overflow. Fonte:
+<code>design-reference/implementation-mobile-390.png</code>. Prova de
+responsividade (header colapsado, hero empilhado, grid 2 col).</em></p>
+<h3 id="d.8-comparação-referência-vs-implementação">D.8 — Comparação
+Referência vs Implementação</h3>
+<div style="text-align:center; margin: 8pt 0;">
+<p><img src="design-reference/comparison-reference-vs-implementation.png" style="width:92%; height:auto; max-width:100%; display:block; margin:0 auto; border:1pt solid #d9e2ec;" alt="Figura D8 — Comparação lado a lado" /></p>
+</div>
+<p><em>Figura D8 — Comparação lado a lado. Fonte:
+<code>design-reference/comparison-reference-vs-implementation.png</code>.
+Fidelidade à referência
+<code>dashboard-selected-blue.png</code>.</em></p>
+<blockquote>
+<p><strong>Checklist antes de exportar PDF:</strong> [ ] prints 1440px
+substituídos, [ ] data visível <code>31 de agosto</code>, [ ] logo
+<code>BAB RANK</code> com coroa, [ ] filtro <code>Última Semana</code>
+isolado, [ ] <code>Ver mais</code> 3 linhas, [ ]
+<code>npm run build</code> + <code>test:sites</code> ok.</p>
+</blockquote>
 </body>
 </html>

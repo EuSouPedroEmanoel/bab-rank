@@ -1,0 +1,12 @@
+@page { margin: 18mm 18mm 20mm 18mm; size: A4; }
+body { font-family: "DejaVu Sans", sans-serif; font-size: 9.5pt; line-height: 1.45; color: #1a1d22; }
+h1 { font-size: 18pt; }
+h2 { font-size: 13pt; border-bottom: 1.5pt solid #0b3a6e; }
+table { font-size: 8pt; border-collapse: collapse; width: 100%; }
+th { background: #0e2a4b; color: white; padding: 4pt; }
+td { padding: 3pt 4pt; border: 0.5pt solid #d9e2ec; }
+tr:nth-child(even) td { background: #f2f6fb; }
+code { font-size: 8pt; }
+pre { font-size: 7.5pt; line-height: 1.35; padding: 6pt; background: #f8fafc; border: 0.5pt solid #d9e2ec; white-space: pre-wrap; }
+/* FIX FOTOS TORTAS: nunca esticar, só largura com altura auto */
+img { max-width: 100%; height: auto !important; display: block; margin: 0 auto; object-fit: contain; }

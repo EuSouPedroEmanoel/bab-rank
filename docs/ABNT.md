@@ -548,7 +548,7 @@ $ curl -s "http://127.0.0.1:3001/api/rankings?period=week&limit=100" | jq '.item
 
 **Limitações reconhecidas:** O `1 failed` em `npm test` (`tests/api/routes.test.js:21`) expõe que a população IGDB é não-determinística — `hypes>5` trouxe mais “cyberpunk” do que o teste esperava. A Epic ainda não fornece contagem de jogadores, então `ranking_entries.concurrent_players` é `null` para `epic` e `provider` vira `egdata-fallback` quando `403/429`. O `game_rankings` permanece vazio porque o ranking é calculado sob demanda via `LATERAL` em `catalog-read-repository.js:53`, não materializado. O histórico “De sempre” é `total_rating` da IGDB, não horas jogadas — limitação explicitada em `server/routes/index.js:20` e no modal “Como calculamos” (`App.jsx:388`).
 
-**Trabalhos futuros (além da entrega):** Materializar `game_rankings` com `REFRESH MATERIALIZED VIEW` para acelerar `ORDER BY score`; adicionar `Redis` para cache de `GET /api/games?q=` (hoje a busca refaz `listGames limit 1000` a cada 300ms); implementar paginação por cursor (`keyset`) em vez de `OFFSET`; cobrir o `1 failed` com `toBeGreaterThanOrEqual` e adicionar `Playwright` e2e para `Header` → `Busca` → `Detalhe` → `Favoritos`; e criar `CI` (`GitHub Actions` `docker compose up` + `npm test` + `pandoc`).
+**Trabalhos futuros (além da entrega):** Materializar `game_rankings` com `REFRESH MATERIALIZED VIEW` para acelerar `ORDER BY score`; adicionar `Redis` para cache de `GET /api/games?q=` (hoje a busca refaz `listGames limit 1000` a cada 300ms); implementar paginação por cursor (`keyset`) em vez de `OFFSET`; cobrir o `1 failed` com `toBeGreaterThanOrEqual` e adicionar `Playwright` e2e para `Header` → `Busca` → `Detalhe` → `Favoritos`; criar `CI` (`GitHub Actions` `docker compose up` + `npm test` + `pandoc`); **e evoluir para perfis de usuário e análises de jogos ao estilo MyAnimeList** — criar tabelas `profiles`, `user_lists` (jogando, concluído, dropado, favoritos) e `reviews` (nota 0–10, texto, spoilers, `helpful` votes), com página de perfil pública `/u/:username`, listas compartilháveis, estatísticas de tempo jogado e moderação, transformando o BAB-RANK de catálogo em comunidade.
 
 Em suma, o BAB-RANK cumpre os 10 pontos não porque lista 8 melhorias, mas porque cada melhoria, cada correção e cada evidência tem comando de reprodução, arquivo-fonte e saída auditada — exatamente o que o PDF único do assignment precisa para identificar o integrante, o repositório e a integração comprovada.
 
@@ -601,3 +601,35 @@ fnm exec --using=lts-latest npm run test:sites # 4 passed
 **Data:** 31 de Agosto de 2026 — **Páginas:** ~15 (ABNT)
 
 **Entrega:** Apenas um integrante envia o PDF por grupo; este arquivo identifica o integrante (solo) e o repositório entregue. `.env` com segredos não foi incluído no GitHub (`.gitignore:4`). O volume `bab-steam-epic_steamtwo_pgdata` preserva dados após rename.
+
+---
+
+## ANEXO D — Prints do Site (inserir capturas)
+
+> **Como usar:** Substitua cada bloco `INSERIR PRINT` pela captura real (`PNG/JPG`). **Não force altura** — use só largura para preservar proporção (já corrigido). Para gerar: `npm run dev` → `http://127.0.0.1:5173/` ou Docker `http://127.0.0.1:3001/` → `Ctrl+Shift+I` → `Device Toolbar` 1440×900, 390×844, 768×1024 → `Ctrl+Shift+P` → `Capture screenshot`.
+
+### D.1 — Home (`/`) — Hero + Top 5 + Última Semana + De Sempre
+> **INSERIR PRINT:** `docs/prints/home-1440.png` — deve mostrar `Hero` com `BAB RANK` + coroa, `Top Strip` 5 jogos, `Dashboard` com `Última Semana` e `De Sempre`.
+
+### D.2 — Catálogo (`/catalogo`) — Filtros loja/gênero, busca, paginação 24pp
+> **INSERIR PRINT:** `docs/prints/catalogo-1440.png` — deve mostrar `Biblioteca BAB-RANK`, `StoreFilters Todos/Steam/Epic`, `Gênero`, `Pesquisar jogos...`, `24 jogos em 141 páginas`, grade 24 cards com `IGDB` badge quando externo. **Enquanto não houver captura, deixar este bloco de texto — não usar placeholder torto.**
+
+### D.3 — Rankings (`/rankings`) — Top 100 com filtros Agora/Semana/De sempre
+> **INSERIR PRINT:** `docs/prints/rankings-1440.png` — `Quem está no topo?`, `store-filter 3 botões`, `ranking-table` 1–100 com `Índice BAB-RANK` e `Variação`.
+
+### D.4 — Detalhe (`/jogos/dcs-world-a-10c-warthog`) — Data 31/08/2026
+> **INSERIR PRINT:** `docs/prints/jogos-dcs-1440.png` — `DETALHE DO JOGO`, `DCS World: A-10C Warthog`, `Índice BAB-RANK 92/100`, `Abrir na Steam`, `Adicionar à lista`, `Última atualização: 31 de agosto de 2026`.
+
+### D.5 — Busca Global (`/busca?q=elden+ring`) — “Pesquisar qualquer jogo”
+> **INSERIR PRINT:** `docs/prints/busca-1440.png` — `BUSCA`, input `Pesquisar... ex: Elden Ring`, `suggestions` dropdown 5 itens + `Ver todos`, `items` com `coverUrl` mesmo sem cadastro (`isExternal`).
+
+### D.6 — Favoritos (`/favoritos`) — localStorage
+> **INSERIR PRINT:** `docs/prints/favoritos-1440.png` — `SUA COLEÇÃO`, `N jogos salvos`, `catalog-grid` com botão `BookmarkSimple fill`, `toast` “adicionado aos favoritos”.
+
+### D.7 — Mobile (`/`, 390×844) — Sem overflow
+> **INSERIR PRINT:** `docs/prints/mobile-390.png` — deve mostrar `Header` colapsado, `Hero` empilhado, `Top Strip` vertical, sem overflow horizontal (captura 390×844).
+
+### D.8 — Comparação Referência vs Implementação
+> **INSERIR PRINT:** `docs/prints/comparacao-1440.png` — opcional, comparação lado a lado `dashboard-selected-blue.png` vs `implementation-1440.png` para prova de fidelidade.
+
+> **Checklist antes de exportar PDF:** [ ] prints 1440px substituídos, [ ] data visível `31 de agosto`, [ ] logo `BAB RANK` com coroa, [ ] filtro `Última Semana` isolado, [ ] `Ver mais` 3 linhas, [ ] `npm run build` + `test:sites` ok.
