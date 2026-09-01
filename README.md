@@ -1,8 +1,8 @@
 # BAB-RANK
 
-> **Autor:** Pedro Emanoel da Silva de Oliveira — **RA:** __________ [INSERIR RA]  
+> **Autor:** Pedro Emanoel da Silva de Oliveira — **RA:** 0210482413036 — **FATEC Ourinhos — Tópicos Especiais em Informática**  
 > **Projeto Atribuído — Fatec** | Evolução de https://github.com/DavidSilvaProg/steamtwo  
-> **Pasta local:** `dev/Fatec/bab-rank` | **Repositório novo:** `https://github.com/<SEU-USUARIO>/bab-rank`
+> **Pasta local:** `dev/Fatec/bab-rank` | **Repositório:** `https://github.com/EuSouPedroEmanoel/bab-rank`
 
 Catálogo de jogos com dashboard de popularidade da Steam e Epic Games, interface em React/HTML/CSS/JS, API Node.js/Express e persistência PostgreSQL — **com Docker Compose completo e integração validada**.
 
@@ -83,11 +83,15 @@ docker exec bab-steam-epic-postgres-1 psql -U steamtwo -d steamtwo -c "\dt" # 9 
 
 O banco pode ser revertido uma migração por vez com `fnm exec --using=lts-latest npm run db:rollback`.
 
-## Documentação ABNT
+## Documentação ABNT — Relatório
 
-- PDF: `docs/ABNT.pdf` (gerado via `pandoc docs/ABNT.md -o docs/ABNT.pdf --pdf-engine=weasyprint`, HTML em `docs/ABNT.html`)
+> **📄 Relatório PDF:** [`docs/ABNT.pdf`](docs/ABNT.pdf) — **caminho oficial para entrega FATEC** (31/08/2026, 15 páginas, RA 0210482413036)
+> **📝 ODT editável:** [`docs/ABNT.odt`](docs/ABNT.odt) (11M, 18 prints do site em ANEXO D)
+
+- PDF: `docs/ABNT.pdf` (gerado via `pandoc docs/ABNT.md -o docs/ABNT.pdf --pdf-engine=weasyprint`, HTML em `docs/ABNT.html` — conversão OnlyOffice `x2t` preserva fotos)
 - Markdown fonte: `docs/ABNT.md` com capa, folha de rosto, sumário, integração, instruções, testes e evidências
-- Evidências: `docs/evidencia-*.txt/json` (ps, health, games, dt, migrations)
+- Evidências: `docs/evidencia-*.txt/json` (ps, health, games, dt, migrations, counts, logs)
+- Prints: `docs/prints/*.png` (home, catalogo, rankings, jogos, busca, favoritos, mobile) + `design-reference/`
 
 ## Integração Back-End + Banco
 
