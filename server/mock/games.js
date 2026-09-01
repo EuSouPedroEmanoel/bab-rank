@@ -180,5 +180,5 @@ export const mockGames = [
   },
 ];
 
-export const mockUpdatedAt = "2026-08-24T18:00:00.000Z";
+export const mockUpdatedAt = "2026-08-31T18:00:00.000Z";
 

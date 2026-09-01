@@ -1,3 +1,14 @@
 NAME                  IMAGE                COMMAND                  SERVICE    CREATED       STATUS                   PORTS
 bab-rank-api-1        bab-rank-api         "docker-entrypoint.s…"   api        4 hours ago   Up 4 hours (healthy)     0.0.0.0:3001->3001/tcp, [::]:3001->3001/tcp
 bab-rank-postgres-1   postgres:17-alpine   "docker-entrypoint.s…"   postgres   6 hours ago   Up 7 minutes (healthy)   0.0.0.0:5433->5432/tcp, [::]:5433->5432/tcp
+        tbl        | count 
+-------------------+-------
+ games             |   421
+ store_listings    |   333
+ genres            |    23
+ ranking_snapshots |     6
+ ranking_entries   |   172
+ game_rankings     |     0
+ sync_runs         |    36
+(7 rows)
+

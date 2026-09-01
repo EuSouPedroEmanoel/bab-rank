@@ -1,0 +1,30 @@
+      [Symbol(kCapture)]: false
+    },
+    _queryQueue: [],
+    _sentQueryQueue: [],
+    pipeline: false,
+    binary: false,
+    processID: 1660,
+    secretKey: -1245624651,
+    ssl: false,
+    sslNegotiation: 'postgres',
+    _connectionTimeoutMillis: 0,
+    _connectionCallback: null,
+    saslSession: null,
+    release: [Function (anonymous)],
+    readyForQuery: true,
+    hasExecuted: true,
+    _poolUseCount: 1,
+    [Symbol(shapeMode)]: false,
+    [Symbol(kCapture)]: false
+  }
+}
+
+Node.js v20.20.2
+BAB-RANK API disponível na porta 3001
+IGDB merge falhou, fallback para DB apenas getaddrinfo ENOTFOUND postgres
+IGDB merge falhou, fallback para DB apenas getaddrinfo ENOTFOUND postgres
+IGDB merge falhou, fallback para DB apenas getaddrinfo ENOTFOUND postgres
+IGDB merge falhou, fallback para DB apenas getaddrinfo ENOTFOUND postgres
+IGDB merge falhou, fallback para DB apenas getaddrinfo ENOTFOUND postgres
+IGDB merge falhou, fallback para DB apenas getaddrinfo ENOTFOUND postgres

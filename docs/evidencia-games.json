@@ -1,1 +1,77 @@
-{"items":[],"pagination":{"page":1,"limit":12,"total":0,"pages":0},"filters":{"q":"","genre":null,"store":"all","sort":"popularity"}}
+{
+    "items": [
+        {
+            "id": "ac7f30cb-1a75-40e5-b5d8-c1532dfa12b1",
+            "slug": "3d-starstrike",
+            "title": "3D Starstrike",
+            "summary": "",
+            "coverUrl": "https://images.igdb.com/igdb/image/upload/t_cover_big/xbuk7hef2t9uxhi9sltn.jpg",
+            "heroUrl": null,
+            "genres": [
+                "Arcade",
+                "Shooter"
+            ],
+            "releaseDate": null,
+            "stores": [],
+            "score": 100,
+            "trend": 0,
+            "currentPlayers": null,
+            "historicalPopularity": 100,
+            "updatedAt": "2026-08-31T20:21:14.462Z"
+        },
+        {
+            "id": "d3858275-42eb-4a2e-b5c0-fb9155f3eb2e",
+            "slug": "arcade-spirits-the-new-challengers",
+            "title": "Arcade Spirits: The New Challengers",
+            "summary": "",
+            "coverUrl": "https://images.igdb.com/igdb/image/upload/t_cover_big/co4if8.jpg",
+            "heroUrl": null,
+            "genres": [
+                "Adventure",
+                "Arcade",
+                "Indie",
+                "Role-playing (RPG)",
+                "Simulator",
+                "Visual Novel"
+            ],
+            "releaseDate": null,
+            "stores": [],
+            "score": 100,
+            "trend": 0,
+            "currentPlayers": null,
+            "historicalPopularity": 100,
+            "updatedAt": "2026-08-31T20:21:14.462Z"
+        },
+        {
+            "id": "a3218cfd-5892-4a0d-bc69-770863ba4be7",
+            "slug": "better-mart-simulator",
+            "title": "Better Mart Simulator",
+            "summary": "",
+            "coverUrl": "https://images.igdb.com/igdb/image/upload/t_cover_big/cobmip.jpg",
+            "heroUrl": null,
+            "genres": [
+                "Indie",
+                "Simulator"
+            ],
+            "releaseDate": null,
+            "stores": [],
+            "score": 100,
+            "trend": 0,
+            "currentPlayers": null,
+            "historicalPopularity": 100,
+            "updatedAt": "2026-08-31T20:21:14.462Z"
+        }
+    ],
+    "pagination": {
+        "page": 1,
+        "limit": 3,
+        "total": 421,
+        "pages": 141
+    },
+    "filters": {
+        "q": "",
+        "genre": null,
+        "store": "all",
+        "sort": "popularity"
+    }
+}

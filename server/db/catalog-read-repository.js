@@ -13,6 +13,7 @@ function mapGame(row) {
     trend: Number(row.trend ?? 0),
     currentPlayers: row.currentPlayers == null ? null : Number(row.currentPlayers),
     historicalPopularity: Number(row.historicalPopularity ?? 0),
+    updatedAt: row.updatedAt ? new Date(row.updatedAt).toISOString() : null,
   };
 }
 
@@ -29,6 +30,7 @@ export function createCatalogReadRepository(pool) {
           g.hero_url AS "heroUrl",
           g.released_at AS "releaseDate",
           g.igdb_popularity AS "historicalPopularity",
+          g.updated_at AS "updatedAt",
           current_ranking.score,
           current_ranking.trend,
           steam_metric.concurrent_players AS "currentPlayers",
@@ -63,7 +65,7 @@ export function createCatalogReadRepository(pool) {
           ORDER BY rs.captured_at DESC
           LIMIT 1
         ) steam_metric ON true
-        GROUP BY g.id, current_ranking.score, current_ranking.trend, steam_metric.concurrent_players
+        GROUP BY g.id, g.updated_at, current_ranking.score, current_ranking.trend, steam_metric.concurrent_players
         ORDER BY COALESCE(current_ranking.score, g.igdb_popularity, 0) DESC, g.title ASC
       `);
       return result.rows.map(mapGame);
