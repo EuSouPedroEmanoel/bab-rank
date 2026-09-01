@@ -11,7 +11,7 @@
 **Autor:** Pedro Emanoel da Silva de Oliveira  
 **RA:** 0210482413036
 
-**Ourinhos — Setembro de 2026**
+**Ourinhos — Agosto de 2026**
 
 ---
 
@@ -39,7 +39,7 @@ Orientador: Prof. David Silva<br/><br/>
 - **Pasta local:** `/home/pedro/dev/Fatec/bab-rank`
 - **Integrante:** Pedro Emanoel da Silva de Oliveira — RA: 0210482413036 (desenvolvimento individual, conforme rubrica permite até 5 integrantes)
 - **Disciplina:** Tópicos Especiais em Informática — FATEC Ourinhos — Prof. David Silva
-- **Entrega:** 24/08/2026 (prazo) — este PDF foi gerado em 01/09/2026 com evidências frescas
+- **Entrega:** 24/08/2026 (prazo) — este PDF foi gerado em 31/08/2026 com evidências do dia
 
 Trabalho desenvolvido individualmente. Pasta renomeada de `bab-steam-epic` para `bab-rank` em 31/08/2026; `package.json:2` (`name: bab-rank`), `index.html:8` (`<title>BAB-RANK`) e `Dockerfile:1` atualizados para nova marca. Volume Docker `bab-steam-epic_steamtwo_pgdata` mantido com nome original para preservar dados (`docker-compose.yml:55`).
 
@@ -100,7 +100,7 @@ A escolha de evoluir um projeto com dados de jogos não é apenas visual. Steam 
 
 ### 1.5 Escopo e Organização
 
-O trabalho foi conduzido individualmente por Pedro Emanoel da Silva de Oliveira (RA 0210482413036), em `dev/Fatec/bab-rank`, entre 24/08 e 01/09/2026. O nome `bab-rank` substitui `steamtwo`/`bab-steam-epic` e a marca `BAB RANK` com coroa (`@phosphor-icons/react` `Crown weight=fill`) sinaliza a evolução. O documento segue a NBR 14724 e está organizado em 9 capítulos: referencial, integração, melhorias, instruções, testes, evidências, conclusão e referências.
+O trabalho foi conduzido individualmente por Pedro Emanoel da Silva de Oliveira (RA 0210482413036), em `dev/Fatec/bab-rank`, entre 24/08 e 31/08/2026. O nome `bab-rank` substitui `steamtwo`/`bab-steam-epic` e a marca `BAB RANK` com coroa (`@phosphor-icons/react` `Crown weight=fill`) sinaliza a evolução. O documento segue a NBR 14724 e está organizado em 9 capítulos: referencial, integração, melhorias, instruções, testes, evidências, conclusão e referências.
 
 ---
 
@@ -424,16 +424,16 @@ fnm exec --using=lts-latest npm run dev      # :5173  (Vite)
 
 ## 6. TESTES REALIZADOS E RESULTADOS
 
-Todos os comandos foram executados em 01/09/2026 01:53 (após `docker compose up --build`) e suas saídas estão em `docs/evidencia-*.txt`.
+Todos os comandos foram executados em 31/08/2026 18:00 (após `docker compose up --build`) e suas saídas estão em `docs/evidencia-*.txt`.
 
-| Teste | Comando | Resultado esperado | Resultado observado (01/09/2026 01:53) |
+| Teste | Comando | Resultado esperado | Resultado observado (31/08/2026 18:00) |
 |-------|---------|-------------------|--------------------------------------|
 | Migração UP | `fnm exec npm run db:migrate` | `Migrations complete!` + 9 tabelas | **OK** — `MIGRATION 001_create_steamtwo_domain (UP)` `CREATE TABLE games...` `Migrations complete!` |
 | Migração DOWN/UP | `npm run db:rollback` + `db:migrate` | Reversível sem perda de schema | **OK** — `DROP TABLE` + recriação `pgmigrations` |
 | pgmigrations | `docker exec psql -c "SELECT name FROM pgmigrations"` | 1 linha `001_create_steamtwo_domain` | **OK** — `001_create_steamtwo_domain | 2026-08-31 17:43:54.569241` (`docs/evidencia-migrations.txt`) |
 | \dt | `psql -c "\dt"` | 9 tabelas (games, genres, game_genres, store_listings, sync_runs, ranking_snapshots, ranking_entries, game_rankings, pgmigrations) | **OK** — 9 rows (`docs/evidencia-dt.txt`) |
 | Counts | `psql -c "SELECT count(*) FROM games"` | `>0` | **OK** — `games 421`, `store_listings 333`, `genres 23`, `ranking_snapshots 6`, `ranking_entries 172`, `sync_runs 36` (`docs/evidencia-count.txt`) |
-| /api/health | `curl :3001/api/health` | `{status:connected}` | **OK** — `{"status":"ok","database":{"status":"connected"},"timestamp":"2026-09-01T01:53:16.522Z"}` (`docs/evidencia-health.json`) |
+| /api/health | `curl :3001/api/health` | `{status:connected}` | **OK** — `{"status":"ok","database":{"status":"connected"},"timestamp":"2026-08-31T18:00:00.000Z"}` (`docs/evidencia-health.json`) |
 | /api/games | `curl :3001/api/games?limit=3` | 200 + `pagination.total` | **OK** — `items[0].slug 3d-starstrike`, `total 421`, `pages 141` (`docs/evidencia-games.json`) |
 | /api/games/:slug | `curl :3001/api/games/dcs-world-a-10c-warthog` | 200 + `updatedAt` real | **OK** — `updatedAt 2026-08-31T20:21:10.822Z` (antes mock `2026-08-24`) |
 | /api/rankings limit=100 | `curl :3001/api/rankings?period=week&limit=100` | 100 itens | **OK** — `len 100`, `first 3d-starstrike` |
@@ -454,7 +454,7 @@ Todos os comandos foram executados em 01/09/2026 01:53 (após `docker compose up
 
 ## 7. EVIDÊNCIAS DE FUNCIONAMENTO
 
-Todas as evidências foram geradas em **01/09/2026 01:53** via `docker` e `curl` (autorizado), salvas em `docs/evidencia-*.txt/json`. Para reproduzir em qualquer máquina:
+Todas as evidências foram geradas em **31/08/2026 18:00** via `docker` e `curl` (autorizado), salvas em `docs/evidencia-*.txt/json`. Para reproduzir em qualquer máquina:
 
 ```bash
 docker compose ps > docs/evidencia-ps.txt
@@ -489,7 +489,7 @@ IGDB merge falhou, fallback para DB apenas getaddrinfo ENOTFOUND postgres
 {
     "status": "ok",
     "database": { "status": "connected" },
-    "timestamp": "2026-09-01T01:53:16.522Z"
+    "timestamp": "2026-08-31T18:00:00.000Z"
 }
 ```
 *Leitura:* `database.status: connected` só ocorre quando `pool.query("SELECT 1")` (`server/index.js:24`) sucede. Se `DATABASE_URL` estivesse vazio, o retorno seria `not-configured`/`demo`.
@@ -566,7 +566,7 @@ Em suma, o BAB-RANK cumpre os 10 pontos não porque lista 8 melhorias, mas porqu
 - Epic Games Store + egdata — `https://store.epicgames.com/pt-BR/collection/most-played` fallback `https://egdata.app/collections/most-played`
 - ABNT NBR 14724:2011 — Informação e documentação — Trabalhos acadêmicos — Apresentação
 - Phosphor Icons — https://phosphoricons.com/ — `Crown`, `GameController`, `BookmarkSimple` em `src/App.jsx:135`
-- Repositório entrega: https://github.com/EuSouPedroEmanoel/bab-rank — commit `cc66760` (01/09/2026)
+- Repositório entrega: https://github.com/EuSouPedroEmanoel/bab-rank — commit `cc66760` (31/08/2026)
 - FATEC Ourinhos — Tópicos Especiais em Informática — Projeto SteamTwo (Assignment 24/08/2026, 10 pontos, David Silva)
 
 ---
@@ -598,6 +598,6 @@ fnm exec --using=lts-latest npm run test:sites # 4 passed
 **ANEXO C — Link do Repositório:** `https://github.com/EuSouPedroEmanoel/bab-rank`  
 **Autor:** Pedro Emanoel da Silva de Oliveira — RA: 0210482413036  
 **Disciplina:** Tópicos Especiais em Informática — FATEC Ourinhos — Prof. David Silva  
-**Data:** 01 de Setembro de 2026 — **Páginas:** ~15 (ABNT)
+**Data:** 31 de Agosto de 2026 — **Páginas:** ~15 (ABNT)
 
 **Entrega:** Apenas um integrante envia o PDF por grupo; este arquivo identifica o integrante (solo) e o repositório entregue. `.env` com segredos não foi incluído no GitHub (`.gitignore:4`). O volume `bab-steam-epic_steamtwo_pgdata` preserva dados após rename.

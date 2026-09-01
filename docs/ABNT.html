@@ -113,7 +113,7 @@ Evolução do Projeto SteamTwo com Integração PostgreSQL, Docker Compose e
 APIs Externas</h2>
 <p><strong>Autor:</strong> Pedro Emanoel da Silva de Oliveira<br />
 <strong>RA:</strong> 0210482413036</p>
-<p><strong>Ourinhos — Setembro de 2026</strong></p>
+<p><strong>Ourinhos — Agosto de 2026</strong></p>
 <hr />
 <div style="text-align: center; margin-top: 40px;">
 <p><strong style="font-size: 22px;">FACULDADE DE TECNOLOGIA DE
@@ -146,7 +146,7 @@ até 5 integrantes)</li>
 <li><strong>Disciplina:</strong> Tópicos Especiais em Informática —
 FATEC Ourinhos — Prof. David Silva</li>
 <li><strong>Entrega:</strong> 24/08/2026 (prazo) — este PDF foi gerado
-em 01/09/2026 com evidências frescas</li>
+em 31/08/2026 com evidências do dia</li>
 </ul>
 <p>Trabalho desenvolvido individualmente. Pasta renomeada de
 <code>bab-steam-epic</code> para <code>bab-rank</code> em 31/08/2026;
@@ -259,7 +259,7 @@ jogadores disfarçada (a Epic sequer expõe contagem pública).</p>
 <h3 id="escopo-e-organização">1.5 Escopo e Organização</h3>
 <p>O trabalho foi conduzido individualmente por Pedro Emanoel da Silva
 de Oliveira (RA 0210482413036), em <code>dev/Fatec/bab-rank</code>,
-entre 24/08 e 01/09/2026. O nome <code>bab-rank</code> substitui
+entre 24/08 e 31/08/2026. O nome <code>bab-rank</code> substitui
 <code>steamtwo</code>/<code>bab-steam-epic</code> e a marca
 <code>BAB RANK</code> com coroa (<code>@phosphor-icons/react</code>
 <code>Crown weight=fill</code>) sinaliza a evolução. O documento segue a
@@ -963,7 +963,7 @@ nunca commitado. O repositório público
 <hr />
 <h2 id="testes-realizados-e-resultados">6. TESTES REALIZADOS E
 RESULTADOS</h2>
-<p>Todos os comandos foram executados em 01/09/2026 01:53 (após
+<p>Todos os comandos foram executados em 31/08/2026 18:00 (após
 <code>docker compose up --build</code>) e suas saídas estão em
 <code>docs/evidencia-*.txt</code>.</p>
 <table>
@@ -978,7 +978,7 @@ RESULTADOS</h2>
 <th>Teste</th>
 <th>Comando</th>
 <th>Resultado esperado</th>
-<th>Resultado observado (01/09/2026 01:53)</th>
+<th>Resultado observado (31/08/2026 18:00)</th>
 </tr>
 </thead>
 <tbody>
@@ -1028,7 +1028,7 @@ ranking_snapshots, ranking_entries, game_rankings, pgmigrations)</td>
 <td><code>curl :3001/api/health</code></td>
 <td><code>{status:connected}</code></td>
 <td><strong>OK</strong> —
-<code>{"status":"ok","database":{"status":"connected"},"timestamp":"2026-09-01T01:53:16.522Z"}</code>
+<code>{"status":"ok","database":{"status":"connected"},"timestamp":"2026-08-31T18:00:00.000Z"}</code>
 (<code>docs/evidencia-health.json</code>)</td>
 </tr>
 <tr>
@@ -1150,8 +1150,8 @@ não incluída neste relatório para que a evidência reflita o estado real
 do CI em 01/09.</p>
 <hr />
 <h2 id="evidências-de-funcionamento">7. EVIDÊNCIAS DE FUNCIONAMENTO</h2>
-<p>Todas as evidências foram geradas em <strong>01/09/2026
-01:53</strong> via <code>docker</code> e <code>curl</code> (autorizado),
+<p>Todas as evidências foram geradas em <strong>31/08/2026
+18:00</strong> via <code>docker</code> e <code>curl</code> (autorizado),
 salvas em <code>docs/evidencia-*.txt/json</code>. Para reproduzir em
 qualquer máquina:</p>
 <div class="sourceCode" id="cb5"><pre
@@ -1199,7 +1199,7 @@ para só <code>DB</code>, sem derrubar <code>healthCheck</code>.</p>
 class="sourceCode json"><code class="sourceCode json"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;status&quot;</span><span class="fu">:</span> <span class="st">&quot;ok&quot;</span><span class="fu">,</span></span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;database&quot;</span><span class="fu">:</span> <span class="fu">{</span> <span class="dt">&quot;status&quot;</span><span class="fu">:</span> <span class="st">&quot;connected&quot;</span> <span class="fu">},</span></span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;timestamp&quot;</span><span class="fu">:</span> <span class="st">&quot;2026-09-01T01:53:16.522Z&quot;</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;timestamp&quot;</span><span class="fu">:</span> <span class="st">&quot;2026-08-31T18:00:00.000Z&quot;</span></span>
 <span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
 <p><em>Leitura:</em> <code>database.status: connected</code> só ocorre
 quando <code>pool.query("SELECT 1")</code>
@@ -1401,7 +1401,7 @@ acadêmicos — Apresentação</li>
 <code>GameController</code>, <code>BookmarkSimple</code> em
 <code>src/App.jsx:135</code></li>
 <li>Repositório entrega: https://github.com/EuSouPedroEmanoel/bab-rank —
-commit <code>cc66760</code> (01/09/2026)</li>
+commit <code>cc66760</code> (31/08/2026)</li>
 <li>FATEC Ourinhos — Tópicos Especiais em Informática — Projeto SteamTwo
 (Assignment 24/08/2026, 10 pontos, David Silva)</li>
 </ul>
@@ -1434,8 +1434,8 @@ class="sourceCode bash"><code class="sourceCode bash"><span id="cb14-1"><a href=
 0210482413036<br />
 <strong>Disciplina:</strong> Tópicos Especiais em Informática — FATEC
 Ourinhos — Prof. David Silva<br />
-<strong>Data:</strong> 01 de Setembro de 2026 —
-<strong>Páginas:</strong> ~15 (ABNT)</p>
+<strong>Data:</strong> 31 de Agosto de 2026 — <strong>Páginas:</strong>
+~15 (ABNT)</p>
 <p><strong>Entrega:</strong> Apenas um integrante envia o PDF por grupo;
 este arquivo identifica o integrante (solo) e o repositório entregue.
 <code>.env</code> com segredos não foi incluído no GitHub
